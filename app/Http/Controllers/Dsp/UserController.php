@@ -20,6 +20,7 @@ use Vanguard\Support\Enum\UserStatus;
 use Vanguard\Services\Validator\ValidateUserCompleteAccount;
 use Session;
 use Vanguard\Services\User\UpdateUser;
+use Vanguard\Libraries\ActivityLog\LogActivity;
 class UserController extends Controller
 {
     use CompanyIdTrait;
@@ -65,6 +66,8 @@ class UserController extends Controller
         $user = \Auth::user();
         $invite_user = new InviteService($validated, $user);
         $new_user = $invite_user->run();   
+        $logactivity = new LogActivity($new_user, "Created");
+        $log = $logactivity->log();
         return new UserResource($new_user);
     }
 
@@ -92,6 +95,8 @@ class UserController extends Controller
         $this->authorize('update', $user);
         $update_user_service = new UpdateService($validated, $this->companyId(), $id, 'web');
         $updated_user = $update_user_service->run();
+        $logactivity = new LogActivity($updated_user, "Updated");
+        $log = $logactivity->log();
         return new UserResource($updated_user);
     }
 
@@ -100,6 +105,8 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $this->authorize('update', $user);
         $send_mail = \Mail::to($user->email)->send(new SendUserInvitationMail($user, $user->full_name));
+        $logactivity = new LogActivity($user, "Resent Invitaion");
+        $log = $logactivity->log();
         return response()->json(array(
             'code' =>  204,
            ),204); 
@@ -110,7 +117,9 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $this->authorize('delete', $user);
         $user->delete();
-       return response()->json(array(
+        $logactivity = new LogActivity($user, "Delete");
+        $log = $logactivity->log();
+          return response()->json(array(
                  'code' =>  204,
                 ),204); 
     }

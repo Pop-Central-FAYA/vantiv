@@ -21,6 +21,7 @@ use Vanguard\Models\Brand;
 use Illuminate\Support\Arr;
 use Vanguard\Http\Resources\BrandCollection;
 use Vanguard\Models\Campaign;
+use Vanguard\Libraries\ActivityLog\LogActivity;
 
 class ClientController extends Controller
 {
@@ -75,7 +76,9 @@ class ClientController extends Controller
         $validated = $request->validated();
         $user = Auth::user();
         $new_client = new StoreClient($validated, $this->companyId(), $user->id);
-        $client = $new_client->run();   
+        $client = $new_client->run(); 
+        $logactivity = new LogActivity($client, "Created");
+        $log = $logactivity->log();  
         $resource = new ClientResource(Client::with('contacts', 'brands')->find($client->id));
         return $resource->response()->setStatusCode(201);
     }
@@ -112,6 +115,8 @@ class ClientController extends Controller
         $validated = $request->validated();
         (new UpdateService($client, $validated))->run();
 
+        $logactivity = new LogActivity($client, "Updated");
+        $log = $logactivity->log();
         $resource = new ClientResource(Client::with('contacts')->find($id));
         return $resource->response()->setStatusCode(200);
 

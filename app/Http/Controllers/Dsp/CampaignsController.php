@@ -24,6 +24,7 @@ use Vanguard\Http\Resources\CampaignResource;
 use Vanguard\Models\AdVendor;
 use Vanguard\Models\CampaignTimeBelt;
 use Vanguard\Services\Mpo\StoreTimeBeltService;
+use Vanguard\Libraries\ActivityLog\LogActivity;
 use Vanguard\User;
 
 class CampaignsController extends Controller
@@ -129,6 +130,8 @@ class CampaignsController extends Controller
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
+        $logactivity = new LogActivity($campaign_time_belt, "Update Adslot");
+        $log = $logactivity->log();
 
         DB::transaction(function() use ($validated, $campaign) {
             (new UpdateTimeBeltService($validated))->run();
@@ -149,6 +152,8 @@ class CampaignsController extends Controller
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
+        $logactivity = new LogActivity($campaign, "Update multiple Adslot");
+        $log = $logactivity->log();
 
         DB::transaction(function() use ($validated, $campaign) {
             (new UpdateTimeBeltService($validated))->run();
@@ -175,6 +180,8 @@ class CampaignsController extends Controller
             event(new CampaignMpoTimeBeltUpdated($campaign));
         });
         //this will be changed when we create a resource for the campaign
+        $logactivity = new LogActivity($campaign, "Store Adslot");
+        $log = $logactivity->log();
         return response()->json([
             'status' => 'success',
             'message' => 'Adslot updated successfully',

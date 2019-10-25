@@ -49,6 +49,7 @@ use Vanguard\Http\Requests\MediaPlan\ClonePlanRequest;
 use Vanguard\Services\MediaPlan\CloneMediaPlanService;
 use Vanguard\Http\Resources\MediaPlanCollection;
 use Vanguard\Services\MediaPlan\DeleteMediaPlanService;
+use Vanguard\Libraries\ActivityLog\LogActivity;
 
 class MediaPlanController extends Controller
 {
@@ -143,6 +144,8 @@ class MediaPlanController extends Controller
         $store_suggestions_service = new StoreMediaPlanSuggestionService($validated['data'], $media_plan);
         $data = $store_suggestions_service->run();
 
+        $logactivity = new LogActivity($media_plan, "Stored Suggestions");
+        $log = $logactivity->log();
         return new MediaPlanSuggestionCollection($data);
     }
 
@@ -246,6 +249,9 @@ class MediaPlanController extends Controller
         $export_name = str_slug($mediaPlan->campaign_name).'.xlsx';
         $formated_media_plan = (new SummarizePlan($mediaPlan))->run();
 
+        $logactivity = new LogActivity($mediaPlan, "Export Media Plan");
+        $log = $logactivity->log();
+
         return Excel::download(new MediaPlanExport($formated_media_plan), $export_name);
     }
 
@@ -259,6 +265,9 @@ class MediaPlanController extends Controller
         $this->sendRequestResponse($media_plan_id, $action);
         $mediaPlan = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
         $selectedSuggestions = $mediaPlan->suggestions->where('status', 1)->where('material_length', '!=', null);
+
+        $logactivity = new LogActivity($mediaPlan, "Media Plan". $action);
+        $log = $logactivity->log();
         return response()->json([
             'status' => 'success',
             'data' =>  new MediaPlanResource($mediaPlan)
@@ -298,6 +307,8 @@ class MediaPlanController extends Controller
             'days' => $days,
         );
         $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
+        $logactivity = new LogActivity($media_plan , "customise Media Plan");
+        $log = $logactivity->log();
         return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
                                                     ->with('clients', $clients)
                                                     ->with('days', $this->listDays())
@@ -412,11 +423,14 @@ class MediaPlanController extends Controller
                 $media_plan = MediaPlan::findOrFail($request->plan_id);
                 $deliverables_service = new StoreMediaPlanDeliverables($media_plan);
                 $deliverables_service->run();
+                $logactivity = new LogActivity($media_plan, "Create Media Plan");
+                $log = $logactivity->log();
             });
         }catch (\Exception $exception){
             Log::error($exception);
             return response()->json(['status'=>'error', 'message'=> "The current operation failed."]);
         }
+       
         return response()->json([
             'message'=>"Media plan updated",
             "status" => "success",
@@ -519,7 +533,8 @@ class MediaPlanController extends Controller
         $company_id = $this->companyId();
         $create_plan_service = new StoreMediaPlanService($validated, $company_id, $user->id);
         $media_plan = $create_plan_service->run();
-
+        $logactivity = new LogActivity($media_plan, "Create new media plan");
+        $log = $logactivity->log();
         if ($media_plan) {
             return [
                 'status'=>"success",
@@ -590,6 +605,8 @@ class MediaPlanController extends Controller
                 // update media plan field to "is_converted_to_mpo"
                 $media_plan->status = MediaPlanStatus::CONVERTED;
                 $media_plan->save();
+                $logactivity = new LogActivity($media_plan, "Convert media Plan to campaign");
+                $log = $logactivity->log();
             });
         } catch (Exception $ex) {
             return response()->json([
@@ -617,6 +634,8 @@ class MediaPlanController extends Controller
             "subject" => "Your Media Plan has been ". $status
 
         );
+        $logactivity = new LogActivity($mediaPlan, "Convert media Plan to campaign");
+        $log = $logactivity->log();
         $send_mail = \Mail::to($this->getPlannerDetails($mediaPlan->planner_id)['email'])->send(new ApprovalNotification($user_mail_content_array));
 
     }
@@ -632,6 +651,9 @@ class MediaPlanController extends Controller
             "subject" => "Request For Approval"
 
           );
+          $mediaPlan = MediaPlan::findorfail($media_plan_id);
+          $logactivity = new LogActivity($mediaPlan, "Request For Approval");
+          $log = $logactivity->log();
             $send_mail = \Mail::to($this->getPlannerDetails($user_id)['email'])->send(new MailForApproval($user_mail_content_array));
     }
 
@@ -675,6 +697,8 @@ class MediaPlanController extends Controller
             $delete_plan = (new DeleteMediaPlanService($media_plan))->run();
             return response()->json(array('code' =>  204), 204); 
         }
+        $logactivity = new LogActivity($media_plan, "Delete Media plan");
+        $log = $logactivity->log();
         return response()->json(array('code' =>  400), 400); 
     }
 
@@ -685,6 +709,8 @@ class MediaPlanController extends Controller
         $user = auth()->user();
         $company_id = $this->companyId();
         $cloned_plan = (new CloneMediaPlanService($media_plan, $validated, $company_id, $user->id))->run();
+        $logactivity = new LogActivity($media_plan, "Clone Media plan");
+        $log = $logactivity->log();
         return new MediaPlanResource($cloned_plan);
     }
 

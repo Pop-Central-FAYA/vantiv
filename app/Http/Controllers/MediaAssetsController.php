@@ -8,6 +8,7 @@ use Vanguard\Services\MediaAsset\CreateMediaAsset;
 use Vanguard\Services\MediaAsset\GetMediaAssets;
 use Vanguard\Models\MediaAsset;
 use Vanguard\Models\Client;
+use Vanguard\Libraries\ActivityLog\LogActivity;
 
 class MediaAssetsController extends Controller
 {
@@ -40,7 +41,8 @@ class MediaAssetsController extends Controller
         // store asset to db
         $store_media_asset = new CreateMediaAsset($request->all());
         $new_media_asset = $store_media_asset->run();
-
+        $logactivity = new LogActivity($new_media_asset, "Created");
+        $log = $logactivity->log();
         if ($new_media_asset) {
             $media_assets = new GetMediaAssets();
             return response()->json([
@@ -66,9 +68,11 @@ class MediaAssetsController extends Controller
 
     public function deleteAsset($id)
     {
-        // soft delete model
+        $media_asset =  MediaAsset::findOrFail($id);
+        $logactivity = new LogActivity($media_asset, "Deleted");
+        $log = $logactivity->log();
+         // soft delete model
         MediaAsset::destroy($id);
-
         // call get all assets method
         return $this->getAssets();
     }

@@ -11,6 +11,7 @@ use Vanguard\Models\Company;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\Company\UpdateRequest;
 use Vanguard\Http\Resources\CompanyResource;
+use Vanguard\Libraries\ActivityLog\LogActivity;
 
 class CompanyController extends Controller
 {
@@ -45,6 +46,8 @@ class CompanyController extends Controller
         $validated = $request->validated();
         $update_company_service = new UpdateCompany($company,  $request);
         $update_company_service->run();
+        $logactivity = new LogActivity($company, "Updated");
+        $log = $logactivity->log();
         return new CompanyResource( Company::findOrFail($id));
     }
 }

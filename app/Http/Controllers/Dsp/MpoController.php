@@ -24,6 +24,7 @@ use Vanguard\Libraries\Enum\MpoStatus;
 use Vanguard\Mail\MpoActionNotification;
 use Vanguard\Mail\MpoReviewNotification;
 use Vanguard\Services\Mpo\StoreMpoService;
+use Vanguard\Libraries\ActivityLog\LogActivity;
 use Vanguard\Services\User\PermittedUser;
 use Vanguard\User;
 
@@ -151,6 +152,9 @@ class MpoController extends Controller
         $validated = $request->validated();
 
         //generate mpo
+        $logactivity = new LogActivity($campaign, "Generate Mpo");
+        $log = $logactivity->log();
+
         (new StoreMpoService($validated, $campaign_id))->run();
         return $this->list($campaign_id);   
     }
@@ -171,6 +175,8 @@ class MpoController extends Controller
         
         $export_name = str_slug($mpo->campaign->name).'_'.str_slug($mpo->vendor->name);
         $formatted_mpo = (new MpoDetailsService($mpo_id))->run();
+        $logactivity = new LogActivity($mpo, "Export Mpo");
+        $log = $logactivity->log();
         return Excel::download(new MpoExport($formatted_mpo),$export_name.'.xlsx');
     }
 
