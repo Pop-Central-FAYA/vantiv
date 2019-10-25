@@ -31,6 +31,7 @@
         "sendgrid/sendgrid": "~7",
         "tucker-eric/eloquentfilter": "^1.4",
         "actuallymab/laravel-comment": "^1.0",
+        "spatie/laravel-activitylog": "^3.2.2",
         "symfony/yaml": "^4.3"
     },
     "require-dev": {

@@ -16,6 +16,7 @@ use Vanguard\Http\Requests\AdVendor\StoreRequest;
 use Vanguard\Http\Requests\AdVendor\UpdateRequest;
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Http\Resources\CampaignMpoResource;
+use Vanguard\Libraries\ActivityLog\LogActivity;
 
 class AdVendorController extends Controller
 {
@@ -94,7 +95,10 @@ class AdVendorController extends Controller
         $company_id = $this->companyId();
         $create_service = new CreateService($validated, $company_id, $user->id);
         $vendor = $create_service->run();
-        
+
+        $logactivity = new LogActivity($vendor, "Created");
+        $log = $logactivity->log();
+
         $resource = new AdVendorResource(AdVendor::find($vendor->id));
         return $resource->response()->setStatusCode(201);
     }
@@ -110,6 +114,8 @@ class AdVendorController extends Controller
         $user = auth()->user();
         $validated = $request->validated();
         (new UpdateService($validated, $vendor, $user->id))->run();
+        $logactivity = new LogActivity($vendor, "Created");
+        $log = $logactivity->log();
         return new AdVendorResource(AdVendor::find($id));
     }
     public function getDetails($id)
