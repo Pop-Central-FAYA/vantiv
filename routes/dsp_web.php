@@ -141,6 +141,23 @@
         });
 
         /**
+         * Station and programs management
+         */
+        Route::group(['namespace' => 'Dsp'], function() {
+
+            Route::group(['prefix' => 'api'], function() {
+                Route::get('stations/lists', 'StationController@list')->name('stations.lists');
+                Route::get('stations/{id}', 'StationController@get')->name('stations.details');
+                Route::post('/stations', 'StationController@store')->name('stations.store');
+                Route::patch('/stations/{id}', 'StationController@update')->name('stations.update');
+
+                //manage programs
+                Route::post('/stations/{station_id}/programs', 'ProgramController@store')->name('programs.store');
+                Route::patch('/stations/{station_id}/programs/{program_id}', 'ProgramController@update')->name('programs.update');
+            });
+        });
+
+        /**
          * File Position
          */
         Route::group(['prefix' => 'media-assets'], function () {
