@@ -155,6 +155,6 @@ class DashboardController extends Controller
         $percentage_finished = $total_finished != 0 ? ($total_finished / $total_campaigns_tv) * 100 : 0;
         $percentage_pending = $total_pending !=0 ? ($total_pending / $total_campaigns_tv) * 100 : 0;
 
-        return (['percentage_active' => $percentage_active, 'percentage_finished' => $percentage_finished, 'percentage_pending' => $percentage_pending]);
+        return (['percentage_active' => round( $percentage_active, 2), 'percentage_finished' => round( $percentage_finished, 2), 'percentage_pending' =>  round( $percentage_pending, 2)]);
     }
 }
