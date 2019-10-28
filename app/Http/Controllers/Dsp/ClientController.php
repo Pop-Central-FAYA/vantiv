@@ -77,7 +77,7 @@ class ClientController extends Controller
         $user = Auth::user();
         $new_client = new StoreClient($validated, $this->companyId(), $user->id);
         $client = $new_client->run(); 
-        $logactivity = new LogActivity($client, "Created");
+        $logactivity = new LogActivity($client, "created");
         $log = $logactivity->log();  
         $resource = new ClientResource(Client::with('contacts', 'brands')->find($client->id));
         return $resource->response()->setStatusCode(201);
@@ -115,7 +115,7 @@ class ClientController extends Controller
         $validated = $request->validated();
         (new UpdateService($client, $validated))->run();
 
-        $logactivity = new LogActivity($client, "Updated");
+        $logactivity = new LogActivity($client, "updated");
         $log = $logactivity->log();
         $resource = new ClientResource(Client::with('contacts')->find($id));
         return $resource->response()->setStatusCode(200);

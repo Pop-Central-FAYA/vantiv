@@ -96,7 +96,7 @@ class AdVendorController extends Controller
         $create_service = new CreateService($validated, $company_id, $user->id);
         $vendor = $create_service->run();
 
-        $logactivity = new LogActivity($vendor, "Created");
+        $logactivity = new LogActivity($vendor, "created");
         $log = $logactivity->log();
 
         $resource = new AdVendorResource(AdVendor::find($vendor->id));
@@ -114,7 +114,7 @@ class AdVendorController extends Controller
         $user = auth()->user();
         $validated = $request->validated();
         (new UpdateService($validated, $vendor, $user->id))->run();
-        $logactivity = new LogActivity($vendor, "Created");
+        $logactivity = new LogActivity($vendor, "updated");
         $log = $logactivity->log();
         return new AdVendorResource(AdVendor::find($id));
     }

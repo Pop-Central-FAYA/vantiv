@@ -28,6 +28,12 @@
         Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->name('user.complete_registration')->middleware('signed');
         Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
     });
+    Route::group(['namespace' => 'Dsp'], function () {
+        Route::get('/password/{token}', 'ProfileController@resetPassword')->name('password.reset');
+        Route::group(['prefix' => 'api'], function () {
+            Route::post('/password', 'ProfileController@processResetPassword')->name('process.password.reset');
+         });
+     });
 
     Route::group(['middleware' => 'auth'], function () {
 
@@ -311,14 +317,6 @@
                 Route::post('/profile/password', 'ProfileController@updatePassword')->name('password.update');
              });
          });
-
-
-     Route::group(['namespace' => 'Dsp'], function () {
-        Route::get('/password/{token}', 'ProfileController@resetPassword')->name('password.reset');
-        Route::group(['prefix' => 'api'], function () {
-            Route::post('/password', 'ProfileController@processResetPassword')->name('process.password.reset');
-         });
-     });
 
     Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
 });

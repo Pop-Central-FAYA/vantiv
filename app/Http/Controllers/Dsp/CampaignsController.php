@@ -130,7 +130,7 @@ class CampaignsController extends Controller
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
-        $logactivity = new LogActivity($campaign_time_belt, "Update Adslot");
+        $logactivity = new LogActivity($campaign_time_belt, "update adslot");
         $log = $logactivity->log();
 
         DB::transaction(function() use ($validated, $campaign) {
@@ -152,7 +152,7 @@ class CampaignsController extends Controller
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
-        $logactivity = new LogActivity($campaign, "Update multiple Adslot");
+        $logactivity = new LogActivity($campaign, "ppdate multiple adslot");
         $log = $logactivity->log();
 
         DB::transaction(function() use ($validated, $campaign) {
@@ -180,7 +180,7 @@ class CampaignsController extends Controller
             event(new CampaignMpoTimeBeltUpdated($campaign));
         });
         //this will be changed when we create a resource for the campaign
-        $logactivity = new LogActivity($campaign, "Store Adslot");
+        $logactivity = new LogActivity($campaign, "store adslot");
         $log = $logactivity->log();
         return response()->json([
             'status' => 'success',
