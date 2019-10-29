@@ -152,7 +152,7 @@ class MpoController extends Controller
         $validated = $request->validated();
 
         //generate mpo
-        $logactivity = new LogActivity($campaign, "Generate Mpo");
+        $logactivity = new LogActivity($campaign, "generate mpo");
         $log = $logactivity->log();
 
         (new StoreMpoService($validated, $campaign_id))->run();
@@ -175,7 +175,7 @@ class MpoController extends Controller
         
         $export_name = str_slug($mpo->campaign->name).'_'.str_slug($mpo->vendor->name);
         $formatted_mpo = (new MpoDetailsService($mpo_id))->run();
-        $logactivity = new LogActivity($mpo, "Export Mpo");
+        $logactivity = new LogActivity($mpo, "export mpo");
         $log = $logactivity->log();
         return Excel::download(new MpoExport($formatted_mpo),$export_name.'.xlsx');
     }

@@ -46,7 +46,7 @@ class CompanyController extends Controller
         $validated = $request->validated();
         $update_company_service = new UpdateCompany($company,  $request);
         $update_company_service->run();
-        $logactivity = new LogActivity($company, "Updated");
+        $logactivity = new LogActivity($company, "updated");
         $log = $logactivity->log();
         return new CompanyResource( Company::findOrFail($id));
     }

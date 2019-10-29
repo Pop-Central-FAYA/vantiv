@@ -71,7 +71,7 @@ class ProfileController extends Controller
         $user = \Auth::user();
         $this->authorize('updateProfile', $user);
         (new UpdateService($user, $validated))->run();
-        $logactivity = new LogActivity($user, "Profile Updated");
+        $logactivity = new LogActivity($user, "profile updated");
         $log = $logactivity->log();
         $resource = new UserResource(User::find($id));
         return $resource->response()->setStatusCode(200);
@@ -85,7 +85,7 @@ class ProfileController extends Controller
         if($user->can('update.profile')){
             (new UpdatePassword($user, $validated))->run();
             $resource = new UserResource($user);
-            $logactivity = new LogActivity($user, "Updated Password");
+            $logactivity = new LogActivity($user, "updated password");
             $log = $logactivity->log();
             return $resource->response()->setStatusCode(200);
         }

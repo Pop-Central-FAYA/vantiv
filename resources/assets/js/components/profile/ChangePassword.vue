@@ -47,6 +47,11 @@
           <v-btn large class="default-vue-btn" @click="updatePassword()" dark>Update Password</v-btn>
         </v-flex>
       </v-layout>
+       <v-layout wrap>
+        <v-flex align-end class="text-md-center">
+            <span> <a href="/login"> Sign in</a></span>
+        </v-flex>
+      </v-layout>
     </v-form>
   </v-container>
 </template>

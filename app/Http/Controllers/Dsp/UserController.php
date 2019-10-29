@@ -66,7 +66,7 @@ class UserController extends Controller
         $user = \Auth::user();
         $invite_user = new InviteService($validated, $user);
         $new_user = $invite_user->run();   
-        $logactivity = new LogActivity($new_user, "Created");
+        $logactivity = new LogActivity($new_user, "created");
         $log = $logactivity->log();
         return new UserResource($new_user);
     }
@@ -95,7 +95,7 @@ class UserController extends Controller
         $this->authorize('update', $user);
         $update_user_service = new UpdateService($validated, $this->companyId(), $id, 'web');
         $updated_user = $update_user_service->run();
-        $logactivity = new LogActivity($updated_user, "Updated");
+        $logactivity = new LogActivity($updated_user, "updated");
         $log = $logactivity->log();
         return new UserResource($updated_user);
     }
@@ -105,7 +105,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $this->authorize('update', $user);
         $send_mail = \Mail::to($user->email)->send(new SendUserInvitationMail($user, $user->full_name));
-        $logactivity = new LogActivity($user, "Resent Invitaion");
+        $logactivity = new LogActivity($user, "resent invitaion");
         $log = $logactivity->log();
         return response()->json(array(
             'code' =>  204,
@@ -117,7 +117,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $this->authorize('delete', $user);
         $user->delete();
-        $logactivity = new LogActivity($user, "Delete");
+        $logactivity = new LogActivity($user, "delete");
         $log = $logactivity->log();
           return response()->json(array(
                  'code' =>  204,
