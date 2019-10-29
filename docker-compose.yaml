@@ -49,45 +49,6 @@ services:
       - SYS_TIME
       - SYS_NICE
 
-  torch:
-    build:
-      context: ./
-      dockerfile: app.dockerfile
-    image: faya-app
-    labels:
-      - traefik.backend=torch
-      - traefik.frontend.rule=Host:local.torch.docker.localhost
-      - traefik.port=8080
-      - traefik.frontend.passHostHeader=true
-    environment:
-      - HOME=/home
-      - AWS_REGION=us-east-1
-      - MYSQL_HOST=database
-      - APACHE_SERVER_NAME=local.torch.docker.localhost
-      - APP_URL=http://local.torch.docker.localhost
-      - SITE_URL=local.torch.docker.localhost
-      - PRODUCT=ssp
-      - CONTAINER_TIMEZONE=UTC
-      - PHP_ERROR_REPORTING=E_ALL
-      - PHP_DISPLAY_ERRORS=On
-      - PHP_DISPLAY_STARTUP_ERRORS=On
-      - PHP_DATE_TIMEZONE=UTC
-      - PHP_XDEBUG_ENABLED=true
-      - DB_HOST=database
-      - DB_USERNAME=faya
-      - DB_PASSWORD=faya
-      - MEDIA_BUCKET=faya-dev-us-east-1-media
-      - PHP_MEMORY_LIMIT=256M
-      - MAIL_DRIVER=log
-      - CACHE_DRIVER=database
-      - DEBUGBAR_ENABLED=false
-    volumes:
-      - $HOME/.aws:/home/.aws:delegated
-      - ./:/var/www:delegated
-    cap_add:
-      - SYS_TIME
-      - SYS_NICE
-
   database:
     image: mysql:5.7
     ports:
