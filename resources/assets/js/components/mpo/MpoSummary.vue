@@ -27,41 +27,41 @@
                         <td class="rule"></td>
                         <td colspan="29" class="text-right rule">Sub Total</td>
                         <td colspan="2" class="text-right rule"></td>
-                        <td colspan="2" class="text-right rule">{{ formatAmount(grossTotal) }}</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(mpoCosting.subTotal) }}</td>
                     </tr>
                     <tr class="rule">
                         <td class="rule"></td>
                         <td colspan="29" class="text-right rule">Volume Discount</td>
-                        <td colspan="2" class="text-right rule">{{ formatAmount(volumeDiscount) }}%</td>
-                        <td colspan="2" class="text-right rule">{{ formatAmount(volumeDiscountValue) }}</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(mpoCosting.volumeDiscount) }}%</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(mpoCosting.volumeDiscountValue) }}</td>
                     </tr>
                     <tr class="rule">
                         <td class="rule"></td>
                         <td colspan="29" class="text-right rule"></td>
                         <td colspan="2" class="text-right rule"></td>
-                        <td colspan="2" class="text-right rule">{{ formatAmount(netTotalLessVolumeDiscount) }}</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(mpoCosting.netTotalLessVolumeDiscount) }}</td>
                     </tr>
                     <tr class="rule">
                         <td class="rule"></td>
                         <td colspan="29" class="text-right rule">Agency Commission</td>
                         <td colspan="2" class="text-right rule">15%</td>
-                        <td colspan="2" class="text-right rule">{{ formatAmount(agencyCommission) }}</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(mpoCosting.agencyCommission) }}</td>
                     </tr>
                     <tr class="rule">
                         <td class="rule"></td>
                         <td colspan="29" class="text-right rule"></td>
                         <td colspan="2" class="text-right rule"></td>
-                        <td colspan="2" class="text-right rule">{{ formatAmount(netTotalLessAgencyCommission) }}</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(mpoCosting.netTotalLessAgencyCommission) }}</td>
                     </tr>
                     <tr class="rule">
                         <td class="rule"></td>
                         <td colspan="29" class="text-right rule">VAT</td>
                         <td colspan="2" class="text-right rule">5%</td>
-                        <td colspan="2" class="text-right rule">{{ formatAmount(vat) }}</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(mpoCosting.vat) }}</td>
                     </tr>
                     <tr class="rule last-record">
                         <td colspan="32" class="text-center rule">Total Amount Payable</td>
-                        <td colspan="2" class="text-right rule">{{ formatAmount(totalPayable) }}</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(mpoCosting.totalPayable) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -74,58 +74,8 @@ export default {
         timeBeltSummary : Array,
         totalBudget : Number,
         netTotal : Number,
-        mpoDetails : Object
-    },
-    data() {
-        return {
-            grossTotal : 0,
-            volumeDiscountValue : 0,
-            volumeDiscount : 0,
-            netTotalLessVolumeDiscount : 0,
-            agencyCommission : 0,
-            netTotalLessAgencyCommission : 0,
-            vat : 0,
-            totalPayable : 0
-        }
-    },
-    mounted () {
-        this.sumGross()
-        this.sumVolumeValue()
-        this.sumVolumePercent()
-        this.sumNetLessVolumeDiscount()
-        this.agencyCommissionValue()
-        this.sumNetLessAgencyCommission()
-        this.calculateVatValue()
-        this.totalAmountPayable()
-    },
-    methods : {
-        sumGross : function() {
-            this.grossTotal = this.timeBeltSummary.reduce((prev,next) => prev + next.gross_total, 0);
-        },
-        sumVolumeValue : function () {
-            this.volumeDiscountValue = this.timeBeltSummary.reduce((prev,next) => prev + next.volume_value, 0);
-        },
-        sumVolumePercent : function() {
-            this.volumeDiscount = this.timeBeltSummary.reduce((prev,next) => prev + next.volume_percent, 0);
-        },
-        sumNetLessVolumeDiscount : function() {
-            this.netTotalLessVolumeDiscount = this.timeBeltSummary.reduce((prev,next) => prev + next.net_less_volume_disc, 0);
-        },
-        agencyCommissionValue : function() {
-            this.agencyCommission = (15 / 100) * this.netTotalLessVolumeDiscount
-        },
-        sumNetLessAgencyCommission : function() {
-            this.netTotalLessAgencyCommission = this.netTotalLessVolumeDiscount - this.agencyCommission
-        },
-        calculateVatValue : function() {
-            this.vat = (5/100) * this.netTotalLessAgencyCommission
-        },
-        totalAmountPayable : function () {
-            this.totalPayable = this.netTotalLessAgencyCommission - this.vat
-        },
-        firstAndLastMonth : function() {
-            first
-        }
+        mpoDetails : Object,
+        mpoCosting : Object
     }
 }
 </script>

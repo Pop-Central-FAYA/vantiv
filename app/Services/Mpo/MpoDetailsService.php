@@ -15,6 +15,10 @@ class MpoDetailsService implements BaseServiceInterface
 
     use GetDayPartTrait;
 
+    const AGENCY_COMMISSION = 15;
+
+    const VAT = 5;
+
     public function __construct($mpo_id)
     {
         $this->mpo_id = $mpo_id;
@@ -35,6 +39,7 @@ class MpoDetailsService implements BaseServiceInterface
         $agency_commission = $this->agencyCommission($total_budget);
         $net_total = $total_budget === 0 ? $total_budget : $total_budget - ((5/100)*$total_budget) - $agency_commission;
         $mpo_time_belt_summary = $this->getMpoSumary($campaign_mpo_time_belts);
+        $costSummary = $this->summariseCost($campaign_mpo_time_belts);
         return [
             'time_belts' => $mpo_time_belts,
             'day_numbers' => $days_array,
@@ -47,6 +52,7 @@ class MpoDetailsService implements BaseServiceInterface
             'company' => $company,
             'net_total_word' => $this->formatNetTotalToWord($net_total),
             'permissions' => Auth::user()->getAllPermissions()->pluck('name'),
+            'costSummary' => $costSummary,
             'links' => [
                 'export' => route('mpos.export', ['mpo_id' => $this->mpo_id], true),
                 'details' => route('mpos.details', ['mpo_id' => $this->mpo_id], true),
@@ -100,6 +106,21 @@ class MpoDetailsService implements BaseServiceInterface
             }
         }
         return $summary_data;
+    }
+
+    protected function summariseCost($campaign_mpo_time_belts)
+    {
+        $mpoSummary = collect($this->getMpoSumary($campaign_mpo_time_belts));
+        return [
+            'subTotal' => $mpoSummary->sum('gross_total'),
+            'volumeDiscount' => $mpoSummary->sum('volume_percent'),
+            'volumeDiscountValue' => $mpoSummary->sum('volume_value'),
+            'netTotalLessVolumeDiscount' => $lessVolume = $mpoSummary->sum('net_less_volume_disc'),
+            'agencyCommission' => $agencyCommission = (self::AGENCY_COMMISSION / 100) * $lessVolume,
+            'netTotalLessAgencyCommission' => $lessCommission = $lessVolume - $agencyCommission,
+            'vat' => $vat = (self::VAT/100) * $lessCommission,
+            'totalPayable' => $lessCommission - $vat
+        ];
     }
 
     protected function getMpo()
