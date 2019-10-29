@@ -3,7 +3,8 @@
 namespace Vanguard\Services\Ratings;
 
 use DB;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Vanguard\Libraries\Query;
 use Vanguard\Libraries\TimeBelt;
 use Vanguard\Models\MpsProfile;
 use Vanguard\Models\TvStation;
@@ -87,8 +88,16 @@ class StoreMediaPlanDeliverables implements BaseServiceInterface
      */
     protected function getGrossImpressions($total_insertions)
     {   
-        $total_audience = $this->suggestions->sum('total_audience');
-        return $total_audience * $total_insertions;
+        $gross_impressions = 0;
+        foreach ($this->suggestions as $item) {
+            $collection = collect($item['material_length'])->flatten(1);
+            $insertions = $collection->sum(function($item) {
+                return (float) $item['exposure'];
+            });
+            $impressions = $insertions * $item['total_audience'];
+            $gross_impressions += $impressions;
+        }
+        return $gross_impressions;
     }
 
     /**
@@ -143,20 +152,6 @@ class StoreMediaPlanDeliverables implements BaseServiceInterface
      * @todo This replicates rating query generation, so find a way to keep them all together
      */
     protected function getNetReach() {
-        // $targeting_filters = $this->getTargetingFilters();
-        // $sub_query = MpsProfile::filter($targeting_filters)
-        //     ->select("mps_profiles.ext_profile_id", "mps_profiles.pop_weight")
-        //     ->join('mps_profile_activities as mpa', 'mpa.ext_profile_id', '=', 'mps_profiles.ext_profile_id')
-        //     ->groupBy('mps_profiles.ext_profile_id')
-        //     ->where(function($query) {
-        //         foreach ($this->suggestions as $item) {
-        //             $query->orWhere(function($sub) use ($item) {
-        //                 $sub->where('mpa.tv_station_id', $item['station_id'])
-        //                     ->where('mpa.day', TimeBelt::shortenDay($item['day']))
-        //                     ->where('mpa.start_time', $item['start_time']);
-        //             });
-        //         }
-        //     });
         $tv_stations = TvStation::all()->groupBy('id');
         $targeting_filters = $this->getTargetingFilters();
         $sub_query = MpsProfile::filter($targeting_filters)
@@ -174,15 +169,10 @@ class StoreMediaPlanDeliverables implements BaseServiceInterface
                     });
                 }
             });
-        // $targeting_filters = $this->getTargetingFilters();
-        // $station_key = Arr::get($targeting_filters, 'station_key');
-        // unset($targeting_filters['station_key']);
-        // $sub_query = MpsProfile::filter($targeting_filters)
-        //     ->select("mps_profiles.ext_profile_id", "mps_profiles.pop_weight")
-        //     ->join('mps_profile_activities', 'mps_profile_activities.ext_profile_id', '=', 'mps_profiles.ext_profile_id')
-        //     ->join('tv_stations', 'tv_stations.key', '=', 'mps_profile_activities.tv_station_key')
-        //     ->groupBy('mps_profiles.ext_profile_id');
-        return round(DB::query()->fromSub($sub_query, 'tbl')->sum('pop_weight'));
+        $query = DB::query()->fromSub($sub_query, 'tbl');
+        $raw_sql = Query::getSql($query);
+        Log::debug($raw_sql);
+        return $query->sum('pop_weight');
     }
 
     protected function getTargetingFilters()

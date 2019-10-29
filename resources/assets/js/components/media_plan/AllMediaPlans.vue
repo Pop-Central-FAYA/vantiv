@@ -21,10 +21,10 @@
             <media-plan-delete 
               :plan="props.item"
             ></media-plan-delete>
-            <clone-media-plan 
+            <!-- <clone-media-plan 
               :plan="props.item"
               :clients="clients"
-            ></clone-media-plan>
+            ></clone-media-plan> -->
           </td>
         </tr>
       </template>

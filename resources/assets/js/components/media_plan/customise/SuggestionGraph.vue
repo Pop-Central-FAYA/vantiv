@@ -123,6 +123,7 @@
                 return newArray;
             },
             //@todo no need to keep performing this work, cache it after running through once
+            //@todo This graph is REALLY inefficient
             seriesByDay(day, key) {
                 key = parseInt(key);
                 if (key != 0) {
@@ -202,8 +203,9 @@
                 var time_arr = category.split('-');
                 var start_time = `${time_arr[0].trim()}:00`;
                 var end_time = `${time_arr[1].trim()}:00`;
+                const shortDay = this.shortDay(day);
                 var timeBelt = this.graphDetails[day][station].find(function(item) {
-                    return (item.day == day && item.start_time == start_time)
+                    return (item.day == shortDay && item.start_time == start_time)
                 });
                 return timeBelt;
             },
