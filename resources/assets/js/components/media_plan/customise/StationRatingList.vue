@@ -9,19 +9,20 @@
             <v-layout style="height: 45vh !important; overflow: auto;">
                 <v-flex md12>
                     <v-expansion-panel px-0>
-                        <v-expansion-panel-content v-for="item in stationsList" v-bind:key="item.key" @input="renderTimeBelts($event, item)">
+
+                        <v-expansion-panel-content v-for="item in stationsList" v-bind:key="listKey(item)" @input="renderTimeBelts($event, item)">
+
                             <template v-slot:actions>
-                                <!-- <v-icon color="secondary" @click="renderTimeBelts(item)">$vuetify.icons.expand</v-icon> -->
                                 <v-icon color="secondary">$vuetify.icons.expand</v-icon>
                             </template>
+
                             <template v-slot:header>
-                                <!-- <v-layout @click="renderTimeBelts(item)"> -->
                                 <v-layout>
                                     <v-flex md6>{{ getStationName(item) }}</v-flex>
                                     <v-flex md6><span class="pl-2">{{ format_audience(item.total_audience) }}</span></v-flex>
                                 </v-layout>
                             </template>
-                            <!-- <v-card v-if="stationsToggle[item.key]['show']" outlined> -->
+
                             <v-card outlined>
                                 <v-card-text>
                                     <v-layout wrap>
@@ -31,6 +32,7 @@
                                     </v-layout>
                                 </v-card-text>
                             </v-card>
+
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </v-flex>
@@ -88,6 +90,9 @@
             this.resetStationsList(this.stationsList);
         },
         methods: {
+            listKey(item) {
+                return `${item.key}-${item.total_audience}`;
+            },
             resetStationsList(stationsList) {
                 var stationsToggle = [];
                 stationsList.forEach((station) => {
