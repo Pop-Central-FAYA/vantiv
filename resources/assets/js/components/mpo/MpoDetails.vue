@@ -16,6 +16,7 @@
             :total-budget="mpo.total_budget"
             :net-total="mpo.net_total"
             :mpo-details="mpo.mpo_details"
+            :mpo-costing="mpo.costSummary"
         >
         </mpo-summary>
         <mpo-terms
