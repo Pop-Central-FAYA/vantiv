@@ -42,7 +42,6 @@
                                         name="ad_vendor"
                                         placeholder="Select Ad Vendor"
                                         solo
-                                        v-validate="'nullable'"
                                     ></v-select>
                                     <span class="text-danger" v-show="errors.has('ad_vendor')">{{ errors.first('ad_vendor') }}</span>
                                 </v-flex>
@@ -115,8 +114,11 @@ export default {
                     this.sweet_alert(res.data.message, 'error')
                 }
             }).catch((error) => {
-                console.log(error)
-                this.sweet_alert(error.response.data.message, 'error')
+                if (error.response && (error.response.status == 422)) {
+                    this.displayServerValidationErrors(error.response.data.errors);
+                } else {
+                    this.sweet_alert('An unknown error has occurred. Please try again', 'error');
+                }
             });
         },
         getVendor : function () {
