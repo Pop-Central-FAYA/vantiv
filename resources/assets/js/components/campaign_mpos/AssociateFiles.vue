@@ -114,6 +114,7 @@
                     Event.$emit('updated-group-adslots',res.data.data.grouped_time_belts)
                     Event.$emit('updated-mpos', res.data.data.campaign_mpos)
                     Event.$emit('updated-campaign', res.data.data)
+                    Event.$emit('updated-adslots', res.data.data.time_belts)
                     this.dialog = false;
                 }
             }).catch((error) => {

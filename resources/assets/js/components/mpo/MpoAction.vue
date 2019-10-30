@@ -17,7 +17,7 @@
                 :mpo="mpoData"
             ></accept-mpo>
         </v-flex>
-        <v-flex xs1 v-if="!isPublic && hasPermissionAction(mpoData.permissions, ['approve.mpo'])">
+        <v-flex xs1 v-if="!isPublic && hasPermission(mpoData.permissions, ['approve.mpo'])">
             <v-tooltip top>
                 <template v-slot:activator="{ on }">
                     <v-btn color="#01c4ca" v-on="on" dark small right :disabled="!isMpoReview()" 
@@ -26,7 +26,7 @@
                 <span>Appove Mpo</span>
             </v-tooltip>
         </v-flex>
-        <v-flex xs1 v-if="!isPublic && hasPermissionAction(mpoData.permissions, ['decline.mpo'])">
+        <v-flex xs1 v-if="!isPublic && hasPermission(mpoData.permissions, ['decline.mpo'])">
             <v-tooltip top>
                 <template v-slot:activator="{ on }">
                     <v-btn color="red" v-on="on" :disabled="!isMpoReview()" dark small right 

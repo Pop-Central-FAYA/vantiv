@@ -27,25 +27,6 @@
                         <v-layout wrap>
                             <v-flex xs12 sm12 md6>
                                 <span>
-                                    Ad Vendor
-                                </span>
-                                <v-select
-                                    v-model="adslot.ad_vendor_id"
-                                    :items="adVendorList"
-                                    item-text="name"
-                                    item-value="id"
-                                    v-validate="'required'"
-                                    name="ad_vendor"
-                                    placeholder="Select Ad Vendor"
-                                    solo
-                                ></v-select>
-                                <span v-if="adslot.ad_vendor_id === null" class="text-danger">
-                                    Add a vendor for this publisher
-                                </span><br>
-                                <span class="text-danger" v-show="errors.has('ad_vendor')">{{ errors.first('ad_vendor') }}</span>
-                            </v-flex>
-                            <v-flex xs12 sm12 md6>
-                                <span>
                                     Publisher
                                 </span>
                                 <v-select
@@ -59,6 +40,26 @@
                                     solo
                                 ></v-select>
                                 <span class="text-danger" v-show="errors.has('publisher')">{{ errors.first('publisher') }}</span>
+                            </v-flex>
+                            <v-flex xs12 sm12 md6>
+                                <span>
+                                    Ad Vendor
+                                </span>
+                                <v-tooltip slot="append" bottom v-if="adVendors.length === 0">
+                                    <v-icon slot="activator" color="primary" dark>info</v-icon>
+                                    <span>You need to assign a vendors to this publisher</span>
+                                </v-tooltip>
+                                <v-select
+                                    v-model="adslot.ad_vendor_id"
+                                    :items="adVendors"
+                                    item-text="name"
+                                    item-value="id"
+                                    v-validate="'required'"
+                                    name="ad_vendor"
+                                    placeholder="Select Ad Vendor"
+                                    solo
+                                ></v-select>
+                                <span class="text-danger" v-show="errors.has('ad_vendor')">{{ errors.first('ad_vendor') }}</span>
                             </v-flex>
                         </v-layout>
                         <v-layout wrap>
@@ -194,7 +195,6 @@ export default {
             type : Array
         },
         publisher : Object,
-        adVendor : Object,
         group : String,
         index : Number,
         selectedAdslots : Array,
@@ -207,18 +207,23 @@ export default {
             media_asset_id : null,
             dateMenu: false,
             publisherData : [this.publisher],
-            vendorData : [this.adVendor]
+            adVendors : []
         }
     },
     mounted() {
+        console.log(this.group);
         const dictionay = {
         custom: {
                 media_asset: {
                     required: 'please choose a video file'
+                },
+                ad_vendor: {
+                    required: 'Ad vendor is required'
                 }
             }
         };
         this.$validator.localize('en', dictionay);
+        this.getVendorByPublisher()
     },
     computed : {
         newTotalInsertions : function (){
@@ -266,7 +271,7 @@ export default {
                     if(this.group){
                         Event.$emit('updated-adslots-from-group', res.data.data.grouped_time_belts[this.index].time_belts)
                     }else{
-                        Event.$emit('updated-group-adslots', res.data.data.grouped_time_belts.time_belts)
+                        Event.$emit('updated-group-adslots', res.data.data.grouped_time_belts)
                     }
                     Event.$emit('updated-adslots', res.data.data.time_belts)
                     this.sweet_alert(res.data.message, 'success');
@@ -282,6 +287,12 @@ export default {
         },
         filterAssetByDuration : function(assets, duration) {
             return assets.filter(item => item.duration === duration);
+        },
+        getVendorByPublisher : function() {
+            var self = this
+            this.adVendors = this.adVendorList.filter((element) => 
+                                element.publishers.some((publisher) => publisher.id === self.adslot.publisher_id)
+                            );
         }
     }
 }

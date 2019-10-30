@@ -22,25 +22,25 @@
         <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mposData" :search="search" :loading="loading" :pagination.sync="pagination" item-key="station" expand :show-expand="true">
         <template v-slot:items="props">
             <tr>
-                <td @click="getMpo(props.item.links.details)" :class="{ 'active-color' : props.item.is_recent }">
+                <td @click="getMpo(props.item.links.details)">
                     <a class="default-vue-link">{{ props.item.vendor }}
                         <span v-if="props.item.is_recent">(Active)</span>
                     </a>
                 </td>
-                <td @click="getMpo(props.item.links.details)" :class="{ 'active-color' : props.item.is_recent }">
+                <td @click="getMpo(props.item.links.details)">
                     {{ props.item.version }}
                 </td>
                 <td @click="getMpo(props.item.links.details)" :class="{ 'active-color' : props.item.is_recent }">
                     {{ props.item.reference }}
                 </td>
-                <td @click="getMpo(props.item.links.details)" class="text-xs-left" :class="{ 'active-color' : props.item.is_recent }">
+                <td @click="getMpo(props.item.links.details)" class="text-xs-left" >
                     {{ format_audience(props.item.net_total) }}
                 </td> 
-                <td @click="getMpo(props.item.links.details)" :class="{ 'active-color' : props.item.is_recent }"
+                <td @click="getMpo(props.item.links.details)" 
                     class="text-xs-left"
                     >{{ props.item.insertions }}
                 </td>
-                <td @click="getMpo(props.item.links.details)" :class="{ 'active-color' : props.item.is_recent }"
+                <td @click="getMpo(props.item.links.details)"
                     class="text-xs-left"
                     >{{ dateToHumanReadable(props.item.created_date) }}
                 </td>
@@ -173,7 +173,7 @@
         padding: 0px 24px;
     }
     .active-color {
-        background-color: #90EE90;
+        color: green;
     }
     .position-icon {
         padding-top: 12px;
