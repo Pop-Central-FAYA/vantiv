@@ -40,6 +40,7 @@
                 <template v-slot:activator="{ on }">
                     <v-btn color="#01c4ca" v-on="on" dark small right @click="exportMpo()">Export</v-btn>
                 </template>
+                <span>Export MPO as PDF</span>
             </v-tooltip>
         </v-flex>
     </v-layout>
@@ -61,9 +62,7 @@ export default {
     },
     methods : {
         exportMpo : function() {
-            var msg = "Export to PDF Functionality in progress, please check back later";
-            this.sweet_alert(msg, 'info');
-            //window.location = this.mpo.links.export
+            window.location = this.mpo.links.export
         },
         back : function() {
             window.location = this.mpoData.links.campaign_details

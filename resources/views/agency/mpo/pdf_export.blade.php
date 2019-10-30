@@ -6,191 +6,103 @@
 <body style="margin-top: 30px; padding: 10px;">
 
 	<div class="file-header" style="width: 100%; text-align: center;">
-		<h2><b>MediaReach</b></h2>
-		<h3>21 akin ogunlewe street, victoria Island</h3>
+        <h2 style="display : block"><b>{{ $data['company']->name }}</b></h2>
+        <img src="{{ $data['company']->logo }}" style="width:100px; height:100px; display : inline-block;" alt=""><br>
+		<h3>{{ $data['company']->address }}</h3>
 	</div>
 	<!-- SUB HEADER -->
 	<div class="row" style="width: 100%; display: inline-block; border-bottom: 1px solid; padding: 10px 10px;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">
-		<div class="col" style="width: 60%; float: left;">
-			<h4>The Advertising manager, <br> My Vend, <br> 21c Akin Ogunlewe, Victorial Island, Lagos.</h4>
+		<div class="col" style="width: 70%; float: left;">
+            <h4>The Advertising manager, <br> {{ $data['mpo_details']->vendor->name }}, <br> 
+            {{ $data['mpo_details']->vendor->street_address }}</h4>
 		</div>
-		<div class="col" style="width: 40%; float: right; text-align: right; display: block;">
+		<div class="col" style="width: 30%; float: right; text-align: right; display: block;">
 			<div style="clear: both;">
 				<div style="float: left; margin-right: 5px; width: 140px;"><h4 style="margin: 4px 5px;">Mpo Number:</h4></div>
-				<div style="float: left;"><h4 style="margin: 4px 5px;">15521971</h4></div>
+				<div style="float: left;"><h4 style="margin: 4px 5px;">{{ $data['mpo_details']->reference_number }}</h4></div>
 			</div>
 			<div style="clear: both;">
 				<div style="float: left; margin-right: 5px; width: 140px;"><h4 style="margin: 4px 5px;">Client:</h4></div>
-				<div style="float: left;"><h4 style="margin: 4px 5px;">Opay</h4></div>
+				<div style="float: left;"><h4 style="margin: 4px 5px;">{{ $data['mpo_details']->campaign->client->name }}</h4></div>
 			</div>
 			<div style="clear: both;">
 				<div style="float: left; margin-right: 5px; width: 140px;"><h4 style="margin: 4px 5px;">Product:</h4></div>
-				<div style="float: left;"><h4 style="margin: 4px 5px;">Ride with me</h4></div>
+				<div style="float: left;"><h4 style="margin: 4px 5px;">{{ $data['mpo_details']->campaign->product }}</h4></div>
 			</div>
 			<div style="clear: both;">
 				<div style="float: left; margin-right: 5px; width: 140px;"><h4 style="margin: 4px 5px;">Campaign:</h4></div>
-				<div style="float: left;"><h4 style="margin: 4px 5px;">Another Smoove Awareness</h4></div>
+				<div style="float: left;"><h4 style="margin: 4px 5px;">{{ $data['mpo_details']->campaign->name }} </h4></div>
 			</div>
 			<div style="clear: both;">
 				<div style="float: left; margin-right: 5px; width: 140px;"><h4 style="margin: 4px 5px;">Brand:</h4></div>
-				<div style="float: left;"><h4 style="margin: 4px 5px;">Oride</h4></div>
+				<div style="float: left;"><h4 style="margin: 4px 5px;">{{ $data['mpo_details']->campaign->brand->name }}</h4></div>
 			</div>
 			<div style="clear: both;">
 				<div style="float: left; margin-right: 5px; width: 140px;"><h4 style="margin: 4px 5px;">Order Date:</h4></div>
-				<div style="float: left;"><h4 style="margin: 4px 5px;">Oct 29, 2019</h4></div>
+				<div style="float: left;"><h4 style="margin: 4px 5px;">{{ date('M d, Y', strtotime(now())) }}</h4></div>
 			</div>
 		</div>
 	</div>
 	<!-- SCHEDULES -->
 	<div class="row schedules">
-		<h4 style="text-align: center;">Schedule</h4>
-		<div class="col">
-			<h4 style="text-align: center;">PLEASE TRANSMIT (15SEC) SPOTS AS SCHEDULED BELOW</h4>
-			<table border="1" style="width: 100%; border-collapse: collapse; border-spacing: unset;">
-				<thead>
-					<tr style="padding:3px; text-align: center; font-size: 13px !important;">
-						<th style="padding: 15px;">Months</th>
-						<th colspan="31" style="padding: 15px;">Insertion Schedule</th>
-						<th rowspan="2" style="padding: 15px;">Monthly Total</th>
-						<th rowspan="2" style="padding: 15px 40px;">Descriptions</th>
-					</tr>
-					<tr style="padding:3px; text-align: center; font-size: 13px !important;">
-						<th class="text-left rule"> Dates</th><th style="padding: 15px; text-align: center;">
-                        1
-                    </th><th style="padding: 15px; text-align: center;">
-                        2
-                    </th><th style="padding: 15px; text-align: center;">
-                        3
-                    </th><th style="padding: 15px; text-align: center;">
-                        4
-                    </th><th style="padding: 15px; text-align: center;">
-                        5
-                    </th><th style="padding: 15px; text-align: center;">
-                        6
-                    </th><th style="padding: 15px; text-align: center;">
-                        7
-                    </th><th style="padding: 15px; text-align: center;">
-                        8
-                    </th><th style="padding: 15px; text-align: center;">
-                        9
-                    </th><th style="padding: 15px; text-align: center;">
-                        10
-                    </th><th style="padding: 15px; text-align: center;">
-                        11
-                    </th><th style="padding: 15px; text-align: center;">
-                        12
-                    </th><th style="padding: 15px; text-align: center;">
-                        13
-                    </th><th style="padding: 15px; text-align: center;">
-                        14
-                    </th><th style="padding: 15px; text-align: center;">
-                        15
-                    </th><th style="padding: 15px; text-align: center;">
-                        16
-                    </th><th style="padding: 15px; text-align: center;">
-                        17
-                    </th><th style="padding: 15px; text-align: center;">
-                        18
-                    </th><th style="padding: 15px; text-align: center;">
-                        19
-                    </th><th style="padding: 15px; text-align: center;">
-                        20
-                    </th><th style="padding: 15px; text-align: center;">
-                        21
-                    </th><th style="padding: 15px; text-align: center;">
-                        22
-                    </th><th style="padding: 15px; text-align: center;">
-                        23
-                    </th><th style="padding: 15px; text-align: center;">
-                        24
-                    </th><th style="padding: 15px; text-align: center;">
-                        25
-                    </th><th style="padding: 15px; text-align: center;">
-                        26
-                    </th><th style="padding: 15px; text-align: center;">
-                        27
-                    </th><th style="padding: 15px; text-align: center;">
-                        28
-                    </th><th style="padding: 15px; text-align: center;">
-                        29
-                    </th><th style="padding: 15px; text-align: center;">
-                        30
-                    </th><th style="padding: 15px; text-align: center;">
-                        31
-                    </th></tr></thead> <tbody><tr style="padding:3px; text-align: center; font-size: 13px !important;"><td style="padding:3px; text-align: center; font-size: 13px !important;">Oct 19</td> <td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        1
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        2
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        1
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        2
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td><td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        
-                    </td> <td style="padding:3px; text-align: center; font-size: 13px !important;">
-                        6
-                    </td> <td style="padding:3px 6px; text-align: left; font-size: 13px !important;">
-                        Station : TVC <br>
-                        Program : Classic <br> 
-                        Daypart : Late Breakfast <br>
-                        Media Asset :  <br>
-                    </td></tr> <tr style="padding:3px;"><td colspan="32" style="padding:3px; font-size: 15px !important;"><h5>Total Number of Insertions</h5></td> <td style="padding:3px; text-align: center; font-size: 13px !important;"><h5>6</h5></td> <td style="padding:3px; text-align: center; font-size: 13px !important;"></td>
-                    </tr>
-                </tbody>
-            </table>
-		</div>
+        <h4 style="text-align: center;">Schedule</h4>
+        @foreach($data['time_belts'] as $time_belt)
+            <div class="col">
+                <h4 style="text-align: center;">PLEASE TRANSMIT ({{ $time_belt['duration'] }}SEC) SPOTS AS SCHEDULED BELOW</h4>
+                <table border="1" style="width: 100%; border-collapse: collapse; border-spacing: unset;">
+                    <thead>
+                        <tr style="padding:3px; text-align: center; font-size: 13px !important;">
+                            <th style="padding: 15px;">Months</th>
+                            <th colspan="31" style="padding: 15px;">Insertion Schedule</th>
+                            <th rowspan="2" style="padding: 15px;">Monthly Total</th>
+                            <th rowspan="2" style="padding: 15px 40px;">Descriptions</th>
+                        </tr>
+                        <tr style="padding:3px; text-align: center; font-size: 13px !important;">
+                            <th class="text-left rule"> Dates</th>
+                            @foreach($data['day_numbers'] as $day_number)
+                                <th style="padding: 10px; text-align: center;">
+                                    {{ $day_number }}
+                                </th>
+                            @endforeach
+                        </tr>
+                    </thead> 
+                    <tbody>
+                        @foreach($time_belt['slots'] as $slot)
+                            <tr style="padding:3px; text-align: center; font-size: 13px !important;">
+                                <td style="padding:3px; text-align: center; font-size: 13px !important;">
+                                    {{ $time_belt['month'] }}
+                                </td> 
+                                @foreach($data['day_numbers'] as $day)
+                                    @if(isset($slot['exposures'][$day]))
+                                        <td style="padding:3px; text-align: center; font-size: 13px !important;">
+                                            {{ $slot['exposures'][$day] }}
+                                        </td>
+                                    @else
+                                    <td style="padding:3px; text-align: center; font-size: 13px !important;">
+                                
+                                    </td>
+                                    @endif
+                                @endforeach
+                                <td style="padding:3px; text-align: center; font-size: 13px !important;">
+                                    {{ $slot['total_spots'] }}
+                                </td>
+                                <td style="padding:3px 6px; text-align: left; font-size: 13px !important;">
+                                    Station : {{ $time_belt['station'] }} <br>
+                                    Program : {{ $time_belt['program'] }} <br> 
+                                    Daypart : {{ $time_belt['daypart'] }} <br>
+                                    Material :  {{ $time_belt['slots'][0]['asset'] }}<br>
+                                </td>
+                            </tr> 
+                        @endforeach
+                        <tr style="padding:3px;">
+                            <td colspan="32" style="padding:3px; font-size: 15px !important;"><h5>Total Number of Insertions</h5></td> 
+                            <td style="padding:3px; text-align: center; font-size: 13px !important;"><h5>{{ $time_belt['total_insertions'] }}</h5></td> 
+                            <td style="padding:3px; text-align: center; font-size: 13px !important;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        @endforeach
 	</div>
 	<!-- COSTING -->
 	<div class="row costing">
@@ -205,65 +117,57 @@
 				</tr>
 			</thead> 
 			<tbody>
-				<tr>
-					<td style="vertical-align: middle; padding: 5px 20px !important;">9</td> 
-					<td colspan="29" style="vertical-align: middle; padding: 5px 20px !important;">
-					  Publisher Name : TVC <br>
-                      Program : Classic <br>
-                      Duration : 15 Seconds
-                    </td> 
-                    <td colspan="2" style="text-align: right; padding: 5px 20px;">12,000</td> 
-                    <td colspan="2" style="text-align: right; padding: 5px 20px;">108,000</td>
-                </tr>
-                <tr>
-                	<td style="vertical-align: middle; padding: 5px 20px !important;">8</td> 
-                	<td colspan="29" style="vertical-align: middle; padding: 5px 20px !important;">
-                		Publisher Name : TVC <br>
-                          Program : Close <br>
-                          Duration : 15 Seconds
-                    </td> 
-                    <td colspan="2" style="text-align: right; padding: 5px 20px;">15,000</td> 
-                    <td colspan="2" style="text-align: right; padding: 5px 20px;">120,000</td>
-                </tr> 
+                @foreach($data['time_belt_summary'] as $summary)
+                    <tr>
+                        <td style="vertical-align: middle; padding: 5px 20px !important;">{{ $summary['total_spot'] }}</td> 
+                        <td colspan="29" style="vertical-align: middle; padding: 5px 20px !important;">
+                        Publisher Name : {{ $summary['publisher_name'] }} <br>
+                        Program : {{ $summary['program'] }} <br>
+                        Duration : {{ $summary['duration'] }} Seconds
+                        </td> 
+                        <td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($summary['rate'], 2) }}</td> 
+                        <td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($summary['gross_total'], 2) }}</td>
+                    </tr>
+                @endforeach
                 <tr>
                 	<td class="rule"></td> 
                 	<td colspan="29" style="text-align: right; padding: 5px 20px;">Sub Total</td> 
                 	<td colspan="2" style="text-align: right; padding: 5px 20px;"></td> 
-                	<td colspan="2" style="text-align: right; padding: 5px 20px;">228,000</td>
+                	<td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($data['costSummary']['subTotal'], 2) }}</td>
                 </tr> 
                 <tr>
                 	<td class="rule"></td> 
                 	<td colspan="29" style="text-align: right; padding: 5px 20px;">Volume Discount</td> 
-                	<td colspan="2" style="text-align: right; padding: 5px 20px;">4%</td> 
-                	<td colspan="2" style="text-align: right; padding: 5px 20px;">4,560</td>
+                	<td colspan="2" style="text-align: right; padding: 5px 20px;">{{ $data['costSummary']['volumeDiscount'] }}%</td> 
+                	<td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($data['costSummary']['volumeDiscountValue'], 2) }}</td>
                 </tr> 
                 <tr>
                 	<td class="rule"></td> 
                 	<td colspan="29" style="text-align: right; padding: 5px 20px;"></td> 
                 	<td colspan="2" style="text-align: right; padding: 5px 20px;"></td> 
-                	<td colspan="2" style="text-align: right; padding: 5px 20px;">223,440</td>
+                	<td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($data['costSummary']['netTotalLessVolumeDiscount'], 2) }}</td>
                 </tr> 
                 <tr>
                 	<td class="rule"></td> 
                 	<td colspan="29" style="text-align: right; padding: 5px 20px;">Agency Commission</td> 
                 	<td colspan="2" style="text-align: right; padding: 5px 20px;">15%</td>
-                	<td colspan="2" style="text-align: right; padding: 5px 20px;">33,516</td>
+                	<td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($data['costSummary']['agencyCommission'], 2) }}</td>
                 </tr> 
                 <tr>
                 	<td class="rule"></td> 
                 	<td colspan="29" style="text-align: right; padding: 5px 20px;"></td> 
                 	<td colspan="2" style="text-align: right; padding: 5px 20px;"></td> 
-                	<td colspan="2" style="text-align: right; padding: 5px 20px;">189,924</td>
+                	<td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($data['costSummary']['netTotalLessAgencyCommission'], 2) }}</td>
                 </tr> 
                 <tr>
                 	<td class="rule"></td> 
                 	<td colspan="29" style="text-align: right; padding: 5px 20px;">VAT</td> 
                 	<td colspan="2" style="text-align: right; padding: 5px 20px;">5%</td> 
-                	<td colspan="2" style="text-align: right; padding: 5px 20px;">9,496.2</td>
+                	<td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($data['costSummary']['vat'], 2) }}</td>
                 </tr> 
                 <tr>
                 	<td colspan="32" style="text-align: center;">Total Amount Payable</td>
-                	<td colspan="2" style="text-align: right; padding: 5px 20px;">180,427.8</td>
+                	<td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($data['costSummary']['totalPayable'], 2) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -303,17 +207,38 @@
             <p style="font-size: 11px;">13. Supplier should attach 2 photocopies of their invoice and COT.</p><p style="font-size: 11px;">14. Please DO NOT plough back any non compliant spot(s) without the approval of MediaReach.</p>
 		</div>
 	</div>
-	<!-- SIGNATURE -->
-	<div class="row signature" style="width: 80%; display: inline-block; margin-top: 20px; margin: 20px 100px;">
-		<div class="col" style="width: 40%; float: left; border-bottom: 1px solid #000; text-align: center; padding-bottom: 10px;">
-			<span style="font-family: cursive;">Busari Ridwan</span>, <br>
-			<span style="font-size: 12px; font-style: italic;">ridwan+vantage@fayamedia.com</span>
-		</div>
-		<div class="col" style="width: 40%; float: right; border-bottom: 1px solid #000; text-align: center; padding-bottom: 10px;">
-			<span style="font-family: cursive;">Test Test , Oct 03, 2019,</span>, <br>
-			<span style="font-size: 12px; font-style: italic;">test@gmail.com,</span> <br>
-			<span style="font-size: 12px; font-style: italic;">08084502721</span>
-		</div>
+    <!-- SIGNATURE -->
+    <br>
+    <br>
+    <div class="row signature" style="width: 80%; display: inline-block; margin-top: 20px; margin: 20px 100px;">
+        @if($data['mpo_details']->requester === null)
+            <div class="col" style="width: 40%; float: left; border-bottom: 1px solid #000; text-align: center; padding-bottom: 10px;">
+                <span style="font-family: cursive;">{{ Auth::user()->full_name }}, 
+                @if($data['mpo_details']->submitted_at) {{ date('M d, Y', strtotime($data['mpo_details']->submitted_at)) }}, @endif</span><br>
+                <span style="font-size: 12px; font-style: italic;">{{ Auth::user()->email }},</span> <br>
+                <span style="font-size: 12px; font-style: italic;">{{ Auth::user()->phone_number }}</span>
+            </div>
+        @else
+            <div class="col" style="width: 40%; float: left; border-bottom: 1px solid #000; text-align: center; padding-bottom: 10px;">
+                <span style="font-family: cursive;">{{ $data['mpo_details']->requester->full_name }}, 
+                @if($data['mpo_details']->submitted_at) {{ date('M d, Y', strtotime($data['mpo_details']->submitted_at)) }}, @endif</span><br>
+                <span style="font-size: 12px; font-style: italic;">{{ $data['mpo_details']->requester->email }},</span> <br>
+                <span style="font-size: 12px; font-style: italic;">{{ $data['mpo_details']->requester->phone_number }}</span>
+            </div>
+        @endif
+
+        @if($data['mpo_details']->mpo_accepter)
+            <div class="col" style="width: 40%; float: right; border-bottom: 1px solid #000; text-align: center; padding-bottom: 10px;">
+                <span style="font-family: cursive;">{{ $data['mpo_details']->mpo_accepter->full_name }} , 
+                {{ date('M d, Y', strtotime($data['mpo_details']->accepted_at)) }},</span>, <br>
+                <span style="font-size: 12px; font-style: italic;">{{ $data['mpo_details']->mpo_accepter->email }},</span> <br>
+                <span style="font-size: 12px; font-style: italic;">{{ $data['mpo_details']->mpo_accepter->phone_number }}</span>
+            </div>
+        @else
+            <div class="col" style="width: 40%; float: right; border-bottom: 1px solid #000; text-align: center; padding-bottom: 10px;">
+                <span style="font-family: cursive;">Media House Rep (Name, Sign, TelNo, Email)</span>
+            </div>
+        @endif
 	</div>
 </body>
 </html>

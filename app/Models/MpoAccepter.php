@@ -13,4 +13,9 @@ class MpoAccepter extends Base
     {
         return $this->belongsTo(CampaignMpo::class);
     }
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
 }

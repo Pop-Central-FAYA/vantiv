@@ -13,6 +13,7 @@ use Vanguard\Services\Mpo\StoreMpoShareLink;
 use Vanguard\Http\Resources\MpoShareLinkResource;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 use Vanguard\Exports\MpoExport;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Models\Campaign;
@@ -168,16 +169,17 @@ class MpoController extends Controller
         return view('agency.mpo.details')->with('mpo', $formatted_mpo);
     }
 
-    public function exportMpoAsExcel($mpo_id)
+    public function exportMpo($mpo_id)
     {
         $mpo = CampaignMpo::findOrFail($mpo_id);
         $this->authorize('details', $mpo);
         
         $export_name = str_slug($mpo->campaign->name).'_'.str_slug($mpo->vendor->name);
-        $formatted_mpo = (new MpoDetailsService($mpo_id))->run();
+        $data = (new MpoDetailsService($mpo_id))->run();
         $logactivity = new LogActivity($mpo, "export mpo");
         $log = $logactivity->log();
-        return Excel::download(new MpoExport($formatted_mpo),$export_name.'.xlsx');
+        $pdf = LaravelMpdf::loadView('agency.mpo.pdf_export', compact('data'));
+        return $pdf->stream($export_name.'.pdf');
     }
 
     public function getActiveLink($mpo_id)

@@ -4,6 +4,7 @@ namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Vanguard\Libraries\Enum\Status;
+use Vanguard\User;
 
 class CampaignMpo extends Base
 {
@@ -53,5 +54,10 @@ class CampaignMpo extends Base
     public function mpo_accepter()
     {
         return $this->hasOne(MpoAccepter::class, 'mpo_id');
+    }
+
+    public function requester()
+    {
+        return $this->belongsTo(User::class, 'requested_by');
     }
 }
