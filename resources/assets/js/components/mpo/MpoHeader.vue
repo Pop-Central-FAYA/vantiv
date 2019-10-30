@@ -9,7 +9,7 @@
         </v-layout>
         <v-layout>
             <v-flex xs12>
-                <h6 class="text-center" style="margin-top : -35px;">{{ company.address }}</h6>
+                <h6 class="text-center">{{ company.address }}</h6>
             </v-flex>
         </v-layout>
         <v-layout>
