@@ -1,44 +1,53 @@
 <template>
-  <v-container grid-list-md class="pt-0 px-0" style="width: 280px; position: absolute; right: 0px; top: 0px; z-index: 1">
-        <v-layout row wrap class="white-bg">
-            <v-flex xs12 sm12 md12 lg12 mb-2>
-                <v-expansion-panel class="comment-panel">
-                    <v-expansion-panel-content>
-                        <template v-slot:header>
-                            <v-icon>comment</v-icon><div>Comments</div>
-                        </template>
-                        <v-card max-width="500" class="mx-auto">
-                            <v-list two-line>
-                                <template v-for="(comment, index) in comments">
-                                    <v-list-tile :key="comment.id+'li'" avatar>
+    <div class="text-xs-center" style="display: inline-block">
+        <v-menu :close-on-content-click="false" :nudge-width="150">
+            <template v-slot:activator="{ on: menu }">
+                <v-btn dark v-on="{ ...menu }" color="default-vue-btn" large><v-icon left>comment</v-icon> Comments</v-btn>
+            </template>
+            <v-container grid-list-md class="p-0">
+                <v-layout row wrap class="white-bg">
+                    <v-flex xs12 sm12 md12 lg12 class="comment-panel">
+                         <v-card max-width="500" class="mx-auto">
+                             <v-card-title>
+                                 <h3>Comments</h3>
+                             </v-card-title>
+                             <v-card-text class="p-0">
+                                 <v-list two-line>
+                                    <template v-for="(comment, index) in comments">
+                                        <v-list-tile :key="comment.id+'li'" avatar>
+                                            <v-list-tile-content>
+                                                <v-list-tile-sub-title class="text--primary">{{ comment.comment }}</v-list-tile-sub-title>
+                                                <v-list-tile-sub-title>By {{ `${comment.user.firstname} ${comment.user.lastname}`  }} {{ timeAgo(comment.created_at) }}</v-list-tile-sub-title>
+                                            </v-list-tile-content>
+                                        </v-list-tile>
+                                        <v-divider v-if="index + 1 < comments.length" :key="index"></v-divider>
+                                    </template>
+                                    <v-list-tile v-if="comments.length == 0">
                                         <v-list-tile-content>
-                                            <v-list-tile-sub-title class="text--primary">{{ comment.comment }}</v-list-tile-sub-title>
-                                            <v-list-tile-sub-title>By {{ `${comment.user.firstname} ${comment.user.lastname}`  }} {{ timeAgo(comment.created_at) }}</v-list-tile-sub-title>
+                                            <v-list-tile-sub-title class="text--primary">No comments</v-list-tile-sub-title>
                                         </v-list-tile-content>
                                     </v-list-tile>
-                                    <v-divider v-if="index + 1 < comments.length" :key="index"></v-divider>
-                                </template>
-                                <v-list-tile v-if="comments.length == 0">
-                                    <v-list-tile-content>
-                                        <v-list-tile-sub-title class="text--primary">No comments</v-list-tile-sub-title>
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                            </v-list>
+                                </v-list>
+                                <v-layout>
+                                    <v-flex xs12>
+                                        <v-textarea solo label="Enter comment" v-model="comment" class="mb-0"></v-textarea>
+                                        <v-btn @click="storeComment()" block color="default-vue-btn my-0" dark>Send</v-btn>
+                                    </v-flex>
+                                </v-layout>
+                             </v-card-text>
                         </v-card>
-                        <v-layout>
-                        <v-flex xs12>
-                            <v-textarea solo label="Enter comment" v-model="comment" class="mb-0"></v-textarea>
-                            <v-btn @click="storeComment()" block color="default-vue-btn my-0" dark>Send</v-btn>
-                        </v-flex>
-                        </v-layout>
-                    </v-expansion-panel-content>
-                </v-expansion-panel>
-            </v-flex>
-        </v-layout>
-    </v-container>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-menu>
+    </div>
+ 
 </template>
 
 <style>
+    .v-menu__content {
+        top: 250px !important;
+    }
     textarea {
         height: 90px;
     }

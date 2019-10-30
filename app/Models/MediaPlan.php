@@ -44,4 +44,9 @@ class MediaPlan extends Base implements Commentable, CanBeFollowedContract
     {
         return $this->belongsTo(Company::class);
     }
+
+    public function creator()
+    {
+        return $this->belongsTo('Vanguard\User','planner_id');
+    }
 }

@@ -79,7 +79,7 @@ class MediaPlanController extends Controller
         return view('agency.mediaPlan.display_suggestions')
             ->with('routes', $routes)
             ->with('filter_values', $this->getTimebeltFilters($media_plan))
-            ->with('media_plan', $media_plan)
+            ->with('media_plan', new MediaPlanResource($media_plan))
             ->with('selected', $selected)
             ->with('stations', [])
             ->with('total_graph', [])
