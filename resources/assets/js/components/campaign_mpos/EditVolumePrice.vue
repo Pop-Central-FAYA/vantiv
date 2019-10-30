@@ -26,10 +26,14 @@
                                     name="volume_discount" v-model="volume_discount"></v-text-field>
                                     <span class="text-danger" v-show="errors.has('volume_discount')">{{ errors.first('volume_discount') }}</span>
                                 </v-flex>
-                                <v-flex xs12 sm12 md12 v-if="group === 'publisher_id' && adVendors.length > 0">
+                                <v-flex xs12 sm12 md12 v-if="group === 'publisher_id'">
                                     <span>
                                         Ad Vendor
                                     </span>
+                                    <v-tooltip slot="append" bottom v-if="adVendors.length === 0">
+                                        <v-icon slot="activator" color="primary" dark>info</v-icon>
+                                        <span>You need to assign a vendor to this publisher</span>
+                                    </v-tooltip>
                                     <v-select
                                         v-model="ad_vendor"
                                         :items="adVendors"
@@ -38,13 +42,11 @@
                                         name="ad_vendor"
                                         placeholder="Select Ad Vendor"
                                         solo
-                                        v-validate="'required'"
+                                        v-validate="'nullable'"
                                     ></v-select>
                                     <span class="text-danger" v-show="errors.has('ad_vendor')">{{ errors.first('ad_vendor') }}</span>
                                 </v-flex>
-                                <v-flex v-else>
-                                    <span class="text-danger">Please add a vendor for this publisher...</span>
-                                </v-flex>
+                                
                             </v-layout>
                         </v-form>
                     </v-container>

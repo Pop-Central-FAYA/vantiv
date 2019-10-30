@@ -11,7 +11,7 @@
                         :ad-vendors="adVendors"
                     ></add-adslot-modal>
                     </v-flex>
-                    <v-flex xs1>
+                    <!-- <v-flex xs1>
                     <edit-volume-campaign-price v-if="selectedAdslots.length > 0"
                         :campaign="campaign"
                         :selected-adslots="selectedAdslots"
@@ -19,20 +19,20 @@
                         :group="group"
                     >
                     </edit-volume-campaign-price>
-                    </v-flex>
+                    </v-flex> -->
                     <v-flex xs1>
-                    <mpo-file-manager v-if="selectedAdslots.length > 0"
+                    <mpo-file-manager v-if="selected.length > 0"
                         :client="client" 
                         :brand="brand"
                         :campaign="campaign"
                         :assets="assets"
-                        :selected-adslots="selectedAdslots"
+                        :selected-adslots="selected"
                         :group="group"
                     ></mpo-file-manager>
                     </v-flex>
                     <v-flex xs4 style="padding-right : 4px;">
                         <v-select
-                            v-model="selected"
+                            v-model="choose"
                             :items="filterParameters"
                             item-text="name"
                             item-value="id"
@@ -45,12 +45,15 @@
                     </v-flex>
                 </v-layout>
             </v-card-title>
-            <v-data-table class="custom-vue-table elevation-1" 
+            <v-data-table 
+                class="custom-vue-table elevation-1" 
                 :headers="getHeader()" 
                 :items="campaignTimeBeltsData" 
-                :search="search" :pagination.sync="pagination" 
-                item-key="station" expand :show-expand="true"
-                v-model="selectedAdslots"
+                :search="search" 
+                :pagination.sync="pagination" 
+                item-key="id"
+                v-model="selected"
+                select-all
             >
             <template v-slot:headers="props">
                 <tr>
@@ -73,7 +76,7 @@
                 </tr>
             </template>
             <template v-slot:items="props">
-                <tr :active="props.selectedAdslots" @click="props.selectedAdslots = !props.selectedAdslots">
+                <tr :active="props.selected" @click="props.selected = !props.selected">
                     <td>
                         <v-checkbox
                         primary
@@ -109,7 +112,7 @@
                             :group="group"
                             :publisher="props.item.publisher"
                             :index="index"
-                            :selected-adslots="selectedAdslots"
+                            :selected-adslots="selected"
                             :campaign="campaign"
                         ></edit-slots-modal>
 
@@ -117,7 +120,7 @@
                         :adslot="props.item"
                         :group="group"
                         :index="index"
-                        :selected-adslots="selectedAdslots"
+                        :selected-adslots="selected"
                         :campaign="campaign"
                         ></delete-slots-modal>
                     </td>
@@ -161,7 +164,6 @@
                 campaignTimeBeltsData : this.campaignTimeBelts,
                 currentItem: {},
                 isHidden : true,
-                selectedAdslots : [],
                 adVendorData : [],
                 click : 0,
                 filterParameters : [
@@ -174,7 +176,8 @@
                         'id' : 'without_asset'
                     }
                 ],
-                selected : ''
+                selected : [],
+                choose : ''
             }
         },
         mounted () {
@@ -204,10 +207,10 @@
                 return header;
             },
             toggleAll : function() {
-                if (this.selectedAdslots.length){
-                    this.selectedAdslots = []
+                if (this.selected.length){
+                    this.selected = []
                 }else {
-                    this.selectedAdslots = this.campaignTimeBeltsData.slice()
+                    this.selected = this.campaignTimeBeltsData.slice()
                 }
             },
             changeSort (column) {
@@ -222,7 +225,7 @@
                 this.sweet_alert('Processing...', 'info')
                 var self = this
                 var found = this.campaignTimeBelts.filter(function(time_belt) {
-                    if(self.selected === 'with_asset'){
+                    if(self.choose === 'with_asset'){
                         return time_belt.asset_id != null
                     }else{
                         return time_belt.asset_id === null

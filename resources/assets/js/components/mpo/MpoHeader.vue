@@ -2,11 +2,9 @@
     <v-card>
         <p><br></p>
         <v-layout>
-            <v-flex xs6>
-                <h2 class="text-right"><b>{{ company.name }}</b></h2>
-            </v-flex>
-            <v-flex xs6>
-                <img :src="company.logo" style="width:100px; height:80px; margin-top : -25px;" alt="">
+            <v-flex xs12 style="text-align : center">
+                <h2 class="text-center" style="display : block"><b>{{ company.name }}</b></h2>
+                <img :src="company.logo" style="width:100px; height:100px; display : inline-block;" alt="">
             </v-flex>
         </v-layout>
         <v-layout>

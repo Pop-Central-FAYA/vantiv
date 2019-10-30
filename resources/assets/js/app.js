@@ -89,7 +89,6 @@ Vue.component('schedule-mpo-filter', () => import('./components/schedule/weekly/
 
 //mpo list
 Vue.component('campaign-mpos-list', () => import('./components/campaign_mpos/DisplayMpoList.vue'));
-Vue.component('mpo-slot-list', () => import('./components/campaign_mpos/DisplayAdslotList.vue'));
 Vue.component('mpo-file-manager', () => import('./components/campaign_mpos/AssociateFiles.vue'));
 Vue.component('submit-mpo-modal', () => import('./components/campaign_mpos/SubmitMpoModal.vue'));
 Vue.component('delete-slots-modal', () => import('./components/campaign_mpos/DeleteSlotModal.vue'));
