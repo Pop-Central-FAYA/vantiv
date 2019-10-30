@@ -256,7 +256,7 @@
 
         Route::group(['namespace' => 'Dsp'], function() {
             Route::get('/mpos/{mpo_id}', 'MpoController@details')->name('mpos.details');
-            Route::get('/mpos/{mpo_id}/export', 'MpoController@exportMpoAsExcel')->name('mpos.export');
+            Route::get('/mpos/{mpo_id}/export', 'MpoController@exportMpo')->name('mpos.export');
 
             #api
             Route::group(['prefix' => 'api'], function() {

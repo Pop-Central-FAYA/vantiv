@@ -37,7 +37,7 @@
                             Program : {{ item.program }} <br>
                             <!-- Program Time : <br>  -->
                             Daypart : {{ item.daypart }} <br>
-                            Media Asset : {{ adslot.asset }} <br>
+                            Material : {{ adslot.asset }} <br>
                         </td>
                     </tr>
                     <tr class="rule">
