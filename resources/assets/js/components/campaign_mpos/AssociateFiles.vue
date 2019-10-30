@@ -118,7 +118,11 @@
                     this.dialog = false;
                 }
             }).catch((error) => {
-                this.sweet_alert('An unknown error has occurred, media assets cannot be associated. Please try again', 'error');
+              if (error.response && (error.response.status == 422)) {
+                    this.displayServerValidationErrors(error.response.data.errors);
+                } else {
+                    this.sweet_alert('An unknown error has occurred, media assets cannot be associated. Please try again', 'error');
+                }
             });
           }
         });

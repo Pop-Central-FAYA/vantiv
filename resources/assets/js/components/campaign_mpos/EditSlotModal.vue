@@ -281,7 +281,11 @@ export default {
                     this.isHidden = true
                 }
             }).catch((error) => {
-                this.sweet_alert(error.response.data.message, 'error');
+                if (error.response && (error.response.status == 422)) {
+                    this.displayServerValidationErrors(error.response.data.errors);
+                } else {
+                    this.sweet_alert('An unknown error has occurred. Please try again', 'error');
+                }
                 this.isHidden = true
             });
         },
