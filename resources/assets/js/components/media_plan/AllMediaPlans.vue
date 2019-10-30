@@ -8,23 +8,18 @@
     </v-card-title>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="allPlans" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <tr @click="redirectPlan(props.item)">
-          <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.campaign_name }}</a></td>
-          <td class="text-xs-left">{{ (props.item.product_name) ? props.item.product_name:'NA' }}</td>
-          <td class="text-xs-left">{{ (props.item.brand) ? props.item.brand.name:'NA' }}</td>
-          <td class="text-xs-left">{{ props.item.media_type }}</td>
-          <td class="text-xs-left">{{ dateToHumanReadable(props.item.start_date)+" - "+dateToHumanReadable(props.item.end_date) }}</td>
-          <td class="text-xs-left">{{ formatNumber(props.item.net_media_cost) }}</td>
-          <td class="text-xs-left" :style="{ 'color' : getStatusColor(props.item.status)}">{{ capitalizeFirstletter(props.item.status) }}</td>
-          <td class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>
-          <td class="justify-center layout px-0">
-            <media-plan-delete 
-              :plan="props.item"
-            ></media-plan-delete>
-            <!-- <clone-media-plan 
-              :plan="props.item"
-              :clients="clients"
-            ></clone-media-plan> -->
+        <tr>
+          <td @click="redirectPlan(props.item)" class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.campaign_name }}</a></td>
+          <td @click="redirectPlan(props.item)" class="text-xs-left">{{ (props.item.product_name) ? props.item.product_name:'NA' }}</td>
+          <td @click="redirectPlan(props.item)" class="text-xs-left">{{ (props.item.brand) ? props.item.brand.name:'NA' }}</td>
+          <td @click="redirectPlan(props.item)" class="text-xs-left">{{ props.item.media_type }}</td>
+          <td @click="redirectPlan(props.item)" class="text-xs-left">{{ dateToHumanReadable(props.item.start_date)+" - "+dateToHumanReadable(props.item.end_date) }}</td>
+          <td @click="redirectPlan(props.item)" class="text-xs-left">{{ formatNumber(props.item.net_media_cost) }}</td>
+          <td @click="redirectPlan(props.item)" class="text-xs-left" :style="{ 'color' : getStatusColor(props.item.status)}">{{ capitalizeFirstletter(props.item.status) }}</td>
+          <td @click="redirectPlan(props.item)" class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>
+          <td class="justify-center layout px-0 actions">
+            <media-plan-delete :plan="props.item"></media-plan-delete>
+            <clone-media-plan :plan="props.item" :clients="clients"></clone-media-plan>
           </td>
         </tr>
       </template>
@@ -44,6 +39,9 @@
   }
   tbody:hover {
     background-color: rgba(0, 0, 0, 0.12);
+  }
+  .actions:hover {
+    cursor: default !important;
   }
 </style>
 

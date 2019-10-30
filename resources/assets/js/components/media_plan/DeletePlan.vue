@@ -2,8 +2,23 @@
   <v-layout>
     <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
-            <v-icon :disabled="isMediaPlanPastReviewStage(plan.status)" color="red" dark v-on="on" right>delete</v-icon>
+            <v-tooltip v-if="isMediaPlanPastReviewStage(plan.status)" top>
+                <template v-slot:activator="{ on }">
+                    <v-layout  v-on="on">
+                      <v-icon class="align-center" disabled right>delete</v-icon>
+                    </v-layout>
+                </template>
+                <span>Cannot delete completed plan</span>
+            </v-tooltip>
+
+            <v-tooltip v-else top>
+                <template v-slot:activator="{ on }">
+                    <v-icon v-on:click.stop="dialog = true" color="red" dark v-on="on" right>delete</v-icon>
+                </template>
+                <span>Delete</span>
+            </v-tooltip>
         </template>
+
       <v-card>
         <v-card-text style="padding: 40px 20px;">
             Are you sure you want to delete media plan with campaign name "{{plan.campaign_name}}"

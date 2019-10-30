@@ -2,7 +2,12 @@
   <v-layout>
     <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
-            <v-icon :disabled="!isMediaPlanPastReviewStage(plan.status)" color="green" dark v-on="on" right>new_releases</v-icon>
+            <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                    <v-icon v-on:click.stop="dialog = true" color="green" dark right v-on="on">file_copy</v-icon>
+                </template>
+                <span>Copy</span>
+            </v-tooltip>
         </template>
       <v-card>
         <v-card-text>
@@ -159,6 +164,7 @@
     },
     data() {
       return {
+          showTooltip: false,
           dialog: false,
           dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
           today: this.formatDate(new Date().toISOString().substr(0, 10)),
