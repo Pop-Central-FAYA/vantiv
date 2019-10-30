@@ -51,7 +51,7 @@ class MpoDetailsService implements BaseServiceInterface
             'time_belt_summary' => $mpo_time_belt_summary,
             'company' => $company,
             'net_total_word' => $this->formatNetTotalToWord($net_total),
-            'permissions' => Auth::user()->getAllPermissions()->pluck('name'),
+            'permissions' => Auth::user()->id ? Auth::user()->getAllPermissions()->pluck('name') : [],
             'costSummary' => $costSummary,
             'links' => [
                 'export' => route('mpos.export', ['mpo_id' => $this->mpo_id], true),
