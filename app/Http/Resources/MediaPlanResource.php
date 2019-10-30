@@ -34,6 +34,12 @@ class MediaPlanResource extends JsonResource
             'avg_frequency' => $this->avg_frequency,
             'cpm' => $this->cpm,
             'cpp' => $this->cpp,
+            'creator' => $this->creator,
+            'gender' => $this->criteria_gender,
+            'age_groups' => json_decode($this->criteria_age_groups),
+            'regions' => json_decode($this->criteria_region),
+            'social_classes' => json_decode($this->criteria_social_class),
+            'states' => json_decode($this->criteria_state),
             'routes' => [
                 'summary' => [
                     'index' => route('agency.media_plan.summary', ['id' => $this->id], false),

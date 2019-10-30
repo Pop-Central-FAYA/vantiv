@@ -19,10 +19,14 @@
             </div>
         </div>
 
-        <media-plan-summary
-        :formatted-plan-data="{{ json_encode($formatted_plan) }}"
-        :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}"    
-        :user-list="{{ json_encode($users) }}"></media-plan-summary>
+        <v-app>
+            <v-content>
+                <media-plan-summary
+                :formatted-plan-data="{{ json_encode($formatted_plan) }}"
+                :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}"    
+                :user-list="{{ json_encode($users) }}"></media-plan-summary>
+            </v-content>
+        </v-app>
         <br><br><br><br><br><br><br>
     </div>
 @stop

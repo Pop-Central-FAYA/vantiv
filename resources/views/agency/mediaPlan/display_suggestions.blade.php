@@ -16,10 +16,9 @@
          <v-app>
             <v-content>
                 <media-plan-suggestions 
-                :selected-suggestions="{{ json_encode($selected) }}" 
-                :plan-status="{{ json_encode($media_plan->status) }}" 
+                :selected-suggestions="{{ json_encode($selected) }}"
+                :plan="{{ json_encode($media_plan) }}" 
                 :redirect-urls="{{ json_encode($routes) }}" 
-                :plan-id="{{ json_encode($media_plan->id) }}" 
                 :filter-values="{{ json_encode($filter_values) }}" 
                 :graph-days="{{ json_encode($days) }}" 
                 :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}" 

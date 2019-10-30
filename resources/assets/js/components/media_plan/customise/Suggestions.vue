@@ -2,10 +2,15 @@
     <v-container grid-list-md class="py-0 px-0">
         <template>
             <v-container grid-list-md class="py-0 px-0 media-plan-body">
+                <v-layout row>
+                    <v-flex md12>
+                        <media-plan-target-attributes :plan="plan"></media-plan-target-attributes>
+                    </v-flex>
+                </v-layout>
                 <v-layout row wrap>
                     <v-card px-0 pt-0 style="width: 100%">
                         <v-card-title>
-                            <v-layout>
+                            <v-layout row>
                                 <v-flex md4 mt-3>
                                     <h4 class="mt-4 weight_medium">AVAILABLE STATION & TIMES</h4>
                                 </v-flex>
@@ -42,7 +47,7 @@
                 <v-layout row wrap mt-5>
                     <v-card px-0 pt-0 style="width: 100%">
                         <v-card-text class="px-0 pt-0 pb-0">
-                            <media-plan-suggestion-selected :plan-id="planId" :selected-time-belts="selectedSuggestions"></media-plan-suggestion-selected>
+                            <media-plan-suggestion-selected :plan-id="plan.id" :selected-time-belts="selectedSuggestions"></media-plan-suggestion-selected>
                         </v-card-text>
                     </v-card>
                 </v-layout>
@@ -53,7 +58,7 @@
                         <v-btn @click="buttonRedirect(redirectUrls.back_action)" color="vue-back-btn" large><v-icon left>navigate_before</v-icon>Back</v-btn>
                     </v-flex>
                     <v-flex xs12 s12 md8 class="px-0 text-right">
-                        <v-btn :disabled="isRunRatings || isMediaPlanPastReviewStage(planStatus)" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
+                        <v-btn :disabled="isRunRatings || isMediaPlanPastReviewStage(plan.status)" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
                         <v-btn @click="goToCompletePlan()" color="default-vue-btn" large>Next<v-icon right>navigate_next</v-icon></v-btn>
                     </v-flex>
                 </v-layout>
@@ -83,10 +88,9 @@
             graphDays: Array,
             filterValues: Object,
             selectedFilters: [Object, Array],
-            planId: String,
-            planStatus: String,
             redirectUrls: Object,
             permissionList:Array,
+            plan: Object,
         },
         data() {
             return {

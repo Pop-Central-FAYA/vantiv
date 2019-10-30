@@ -1,13 +1,15 @@
 <template>
     <v-container grid-list-md class="py-0 px-0">
+        <v-layout row>
+            <v-flex md12>
+                <media-plan-target-attributes :plan="planDetails"></media-plan-target-attributes>
+            </v-flex>
+        </v-layout>
         <template>
             <v-container grid-list-md class="py-0 px-0 media-plan-body">
                 <div class="the_frame clearfix border_top_color load_stuff">
-                    <div class="margin_center col_10 clearfix create_fields">
-                        <div class="clearfix mb4 mt2" style="position: relative; margin-bottom: 4rem;">
-                            <comment :model-id="planDetails.id" :routes="planDetails.routes.comments"></comment>
-                        </div>
-                        <div class="the_stats the_frame clearfix mb4 mt4">
+                    <div class="margin_center col_11 clearfix create_fields">
+                        <div class="the_stats the_frame clearfix mb4 mt2">
                             <table class="display dashboard_campaigns">
                                 <tbody>
                                     <tr>
@@ -60,6 +62,7 @@
                                 <media-plan-create-campaign :id="planDetails.id" :permissionList="permissionList"></media-plan-create-campaign>
                             </template>
                             <template>
+                                <comment :model-id="planDetails.id" :routes="planDetails.routes.comments"></comment>
                                 <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(planDetails.routes.summary.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                             </template>
                         </div>

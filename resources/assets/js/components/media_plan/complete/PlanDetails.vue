@@ -1,11 +1,13 @@
 <template>
     <v-container grid-list-md class="pt-0 pb-3 px-0">
+        <v-layout row>
+            <v-flex md12>
+                <media-plan-target-attributes :plan="plan"></media-plan-target-attributes>
+            </v-flex>
+        </v-layout>
         <template>
             <v-container grid-list-md class="py-0 px-0 media-plan-body">
-                <v-layout row wrap class="px-4 pb-3 white-bg">
-                    <v-flex xs12 style="min-height: 70px">
-                        <comment :model-id="plan.id" :routes="plan.routes.comments"></comment>
-                    </v-flex>
+                <v-layout row wrap class="px-4 pb-3 white-bg mt-3">
                     <v-flex xs12>
                         <media-plan-deliverables :media-plan="mediaPlan"></media-plan-deliverables>
                     </v-flex>
@@ -110,6 +112,7 @@
                     </v-flex>
                     <v-flex xs12 s12 md8 class="px-0 text-right">
                         <v-btn :disabled="isRunRatings || isMediaPlanPastReviewStage(plan.status)" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
+                        <comment :model-id="plan.id" :routes="plan.routes.comments"></comment>
                         <v-btn @click="goToSummary()" color="default-vue-btn" large>Summary<v-icon right>navigate_next</v-icon></v-btn>
                     </v-flex>
                 </v-layout>
