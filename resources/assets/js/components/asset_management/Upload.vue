@@ -60,7 +60,7 @@
                                 </v-tooltip>
                             </span>
                             <v-text-field solo v-model="assetInputLabel" prepend-icon="attach_file" accept="video/*" @click="chooseFile('ASSET')"></v-text-field>
-                            <input type="file" style="display: none" ref="video" accept="video/*" v-validate="'required|ext:mp4,3gp,ogg,avi'" name="asset" @change="on_file_change($event, 'ASSET')">
+                            <input type="file" style="display: none" ref="video" accept="video/*" v-validate="'required|ext:mp4,3gp,ogg,avi,mov'" name="asset" @change="on_file_change($event, 'ASSET')">
                             <span class="text-danger" v-show="errors.has('asset')">{{ errors.first('asset') }}</span>
                         </v-flex>
                     </v-layout>
