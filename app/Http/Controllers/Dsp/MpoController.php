@@ -79,6 +79,9 @@ class MpoController extends Controller
                 $mpo->save();
 
                 Mail::to($reviewer->email)->send(new MpoReviewNotification($this->reviewInformation($mpo, $reviewer, $sender)));
+                $logactivity = new LogActivity($mpo, "requested mpo review");
+                $log = $logactivity->log();
+                
             });
             return new CampaignMpoResource($mpo);
         }
@@ -100,6 +103,8 @@ class MpoController extends Controller
 
                 Mail::to($reciever->email)
                     ->send(new MpoActionNotification($this->reviewInformation($mpo, $reciever, $reviewer, 'approved')));
+                    $logactivity = new LogActivity($mpo, "approved mpo");
+                    $log = $logactivity->log();
             });
             return (new MpoDetailsService($mpo_id))->run();
         }
@@ -118,6 +123,8 @@ class MpoController extends Controller
 
                 Mail::to($reciever->email)
                     ->send(new MpoActionNotification($this->reviewInformation($mpo, $reciever, $reviewer, 'declined')));
+                    $logactivity = new LogActivity($mpo, "declined mpo");
+                     $log = $logactivity->log();
             });
             return (new MpoDetailsService($mpo_id))->run();
         }
@@ -176,7 +183,7 @@ class MpoController extends Controller
         
         $export_name = str_slug($mpo->campaign->name).'_'.str_slug($mpo->vendor->name);
         $data = (new MpoDetailsService($mpo_id))->run();
-        $logactivity = new LogActivity($mpo, "export mpo");
+        $logactivity = new LogActivity($mpo, "exported mpo");
         $log = $logactivity->log();
         $pdf = LaravelMpdf::loadView('agency.mpo.pdf_export', compact('data'));
         return $pdf->stream($export_name.'.pdf');

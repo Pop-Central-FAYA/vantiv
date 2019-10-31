@@ -130,7 +130,7 @@ class CampaignsController extends Controller
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
-        $logactivity = new LogActivity($campaign_time_belt, "update adslot");
+        $logactivity = new LogActivity($campaign_time_belt, "updated adslot");
         $log = $logactivity->log();
 
         DB::transaction(function() use ($validated, $campaign) {
@@ -152,7 +152,7 @@ class CampaignsController extends Controller
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
-        $logactivity = new LogActivity($campaign, "ppdate multiple adslot");
+        $logactivity = new LogActivity($campaign, "updated multiple adslot");
         $log = $logactivity->log();
 
         DB::transaction(function() use ($validated, $campaign) {

@@ -144,7 +144,7 @@ class MediaPlanController extends Controller
         $store_suggestions_service = new StoreMediaPlanSuggestionService($validated['data'], $media_plan);
         $data = $store_suggestions_service->run();
 
-        $logactivity = new LogActivity($media_plan, "stored suggestions");
+        $logactivity = new LogActivity($media_plan, "create media plan suggestions");
         $log = $logactivity->log();
         return new MediaPlanSuggestionCollection($data);
     }
@@ -249,7 +249,7 @@ class MediaPlanController extends Controller
         $export_name = str_slug($mediaPlan->campaign_name).'.xlsx';
         $formated_media_plan = (new SummarizePlan($mediaPlan))->run();
 
-        $logactivity = new LogActivity($mediaPlan, "export media plan");
+        $logactivity = new LogActivity($mediaPlan, "exported media plan");
         $log = $logactivity->log();
 
         return Excel::download(new MediaPlanExport($formated_media_plan), $export_name);
@@ -307,7 +307,7 @@ class MediaPlanController extends Controller
             'days' => $days,
         );
         $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
-        $logactivity = new LogActivity($media_plan , "customise media plan");
+        $logactivity = new LogActivity($media_plan , "customised media plan");
         $log = $logactivity->log();
         return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
                                                     ->with('clients', $clients)
@@ -423,7 +423,7 @@ class MediaPlanController extends Controller
                 $media_plan = MediaPlan::findOrFail($request->plan_id);
                 $deliverables_service = new StoreMediaPlanDeliverables($media_plan);
                 $deliverables_service->run();
-                $logactivity = new LogActivity($media_plan, "create media plan");
+                $logactivity = new LogActivity($media_plan, "created media plan");
                 $log = $logactivity->log();
             });
         }catch (\Exception $exception){
@@ -533,7 +533,7 @@ class MediaPlanController extends Controller
         $company_id = $this->companyId();
         $create_plan_service = new StoreMediaPlanService($validated, $company_id, $user->id);
         $media_plan = $create_plan_service->run();
-        $logactivity = new LogActivity($media_plan, "create new media plan");
+        $logactivity = new LogActivity($media_plan, "created new media plan");
         $log = $logactivity->log();
         if ($media_plan) {
             return [
@@ -605,7 +605,7 @@ class MediaPlanController extends Controller
                 // update media plan field to "is_converted_to_mpo"
                 $media_plan->status = MediaPlanStatus::CONVERTED;
                 $media_plan->save();
-                $logactivity = new LogActivity($media_plan, "convert media plan to campaign");
+                $logactivity = new LogActivity($media_plan, "converted media plan to campaign");
                 $log = $logactivity->log();
             });
         } catch (Exception $ex) {
@@ -634,7 +634,7 @@ class MediaPlanController extends Controller
             "subject" => "Your Media Plan has been ". $status
 
         );
-        $logactivity = new LogActivity($mediaPlan, "convert media plan to campaign");
+        $logactivity = new LogActivity($mediaPlan, "converted media plan to campaign");
         $log = $logactivity->log();
         $send_mail = \Mail::to($this->getPlannerDetails($mediaPlan->planner_id)['email'])->send(new ApprovalNotification($user_mail_content_array));
 
@@ -652,7 +652,7 @@ class MediaPlanController extends Controller
 
           );
           $mediaPlan = MediaPlan::findorfail($media_plan_id);
-          $logactivity = new LogActivity($mediaPlan, "request for approval");
+          $logactivity = new LogActivity($mediaPlan, "requested for approval");
           $log = $logactivity->log();
             $send_mail = \Mail::to($this->getPlannerDetails($user_id)['email'])->send(new MailForApproval($user_mail_content_array));
     }
@@ -697,7 +697,7 @@ class MediaPlanController extends Controller
             $delete_plan = (new DeleteMediaPlanService($media_plan))->run();
             return response()->json(array('code' =>  204), 204); 
         }
-        $logactivity = new LogActivity($media_plan, "delete media plan");
+        $logactivity = new LogActivity($media_plan, "deleted media plan");
         $log = $logactivity->log();
         return response()->json(array('code' =>  400), 400); 
     }
@@ -709,7 +709,7 @@ class MediaPlanController extends Controller
         $user = auth()->user();
         $company_id = $this->companyId();
         $cloned_plan = (new CloneMediaPlanService($media_plan, $validated, $company_id, $user->id))->run();
-        $logactivity = new LogActivity($media_plan, "clone media plan");
+        $logactivity = new LogActivity($media_plan, "cloned media plan");
         $log = $logactivity->log();
         return new MediaPlanResource($cloned_plan);
     }
