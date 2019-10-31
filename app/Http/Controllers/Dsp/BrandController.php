@@ -33,7 +33,7 @@ class BrandController extends Controller
        
         $new_brand = new StoreBrand($validated, $validated['client_id'], $user->id);
         $brand = $new_brand->run();   
-        $logactivity = new LogActivity($brand, "created");
+        $logactivity = new LogActivity($brand, "created brand");
         $log = $logactivity->log();
         $resource = new BrandResource(Brand::find($brand->id));
         return $resource->response()->setStatusCode(201);
@@ -49,7 +49,7 @@ class BrandController extends Controller
 
         $validated = $request->validated();
         (new UpdateBrand($brand, $validated))->run();
-        $logactivity = new LogActivity($brand, "updated");
+        $logactivity = new LogActivity($brand, "updated brand");
         $log = $logactivity->log();
 
         $resource = new BrandResource(Brand::find($id));
