@@ -46,7 +46,9 @@ use Vanguard\Services\Ratings\StoreMediaPlanDeliverables;
 use Vanguard\Http\Resources\UserCollection;
 use Vanguard\Http\Resources\MediaPlanResource;
 use Vanguard\Http\Requests\MediaPlan\ClonePlanRequest;
+use Vanguard\Http\Requests\MediaPlan\UpdatePlanRequest;
 use Vanguard\Services\MediaPlan\CloneMediaPlanService;
+use Vanguard\Services\MediaPlan\UpdateMediaPlanService;
 use Vanguard\Http\Resources\MediaPlanCollection;
 use Vanguard\Services\MediaPlan\DeleteMediaPlanService;
 use Vanguard\Libraries\ActivityLog\LogActivity;
@@ -68,7 +70,7 @@ class MediaPlanController extends Controller
         $media_plan = MediaPlan::findOrFail($id);
 
         $routes = [
-            'back_action' => route('agency.media_plans', [], false),
+            'back_action' => route('agency.media_plan.criteria_form', ['id' => $media_plan->id], false),
             'next_action' => route('agency.media_plan.create', ['id' => $media_plan->id], false),
             'save_action' => route('agency.media_plan.select_suggestions', ['id' => $media_plan->id], false),
             'new_ratings_action' => route('reach.get', ['id' => $media_plan->id], false),
@@ -150,6 +152,23 @@ class MediaPlanController extends Controller
     }
 
     /**
+     * Update a media plan
+     */
+    public function update(UpdatePlanRequest $request, $id)
+    {
+        $validated = $request->validated();
+        $media_plan = MediaPlan::findOrFail($id);
+
+        $service = new UpdateMediaPlanService($validated, $media_plan);
+        $media_plan = $service->run();
+
+        $logactivity = new LogActivity($media_plan, "updated media plan");
+        $logactivity->log();
+
+        return new MediaPlanResource($media_plan);
+    }
+
+    /**
      * ****************** BELOW ARE THE OLD METHODS *****************
      */
     public function index(Request $request)
@@ -162,8 +181,14 @@ class MediaPlanController extends Controller
                                 ->with('clients', $clients);
     }
 
-    public function criteriaForm(Request $request)
+    public function criteriaForm(Request $request, $id=null)
     {
+        if ($id == null) {
+            $media_plan = [];
+        } else {
+            $media_plan = MediaPlan::findOrFail($id);
+            $media_plan = new MediaPlanResource($media_plan);
+        }
         $criterias = Criteria::with(['subCriterias'])->get();
         $new_criterias = [];
         foreach ($criterias as $key => $criteria) {
@@ -178,7 +203,8 @@ class MediaPlanController extends Controller
         // return criterias array with the frontend view, in order to populate criteria inputs
         return view('agency.mediaPlan.create_plan')->with('criterias', $new_criterias)
                                                 ->with('clients', $clients)
-                                                ->with('redirect_urls', ['submit_form' => route('agency.media_plan.submit.criterias')]);
+                                                ->with('redirect_urls', ['submit_form' => route('agency.media_plan.submit.criterias')])
+                                                ->with('media_plan', $media_plan);
     }
 
     public function groupSuggestions($query)

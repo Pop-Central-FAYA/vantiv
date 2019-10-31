@@ -15,7 +15,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb">
             <div class="column col_6">
-                <h2 class="sub_header">Create Media Plan</h2>
+                <h2 class="sub_header">Media Plan Information</h2>
             </div>
         </div>
 
@@ -28,6 +28,7 @@
                             :criterias="{{ json_encode($criterias) }}" 
                             :redirect-urls="{{ json_encode($redirect_urls) }}"
                             :clients="{{ json_encode($clients) }}"
+                            :media-plan="{{ json_encode($media_plan, JSON_FORCE_OBJECT) }}"
                         ></media-plan-criteria-form>
                     </v-content>
                 </v-app>

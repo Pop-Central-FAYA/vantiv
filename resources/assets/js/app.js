@@ -295,6 +295,9 @@ Vue.mixin({
                 return false
             }
         },
+        isMediaPlanEditable(status) {
+            return ['pending', 'in review'].includes(status.toLowerCase());
+        },
         capitalizeFirstletter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1); 
         },

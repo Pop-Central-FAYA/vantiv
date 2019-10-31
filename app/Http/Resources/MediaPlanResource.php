@@ -25,6 +25,7 @@ class MediaPlanResource extends JsonResource
             'client_id' => $this->client_id,
             'brand_id' => $this->brand_id,
             'product_name' => $this->product_name,
+            'agency_commission' => $this->agency_commission,
             'net_media_cost' => $this->net_media_cost,
             'brand' => $this->brand,
             'total_insertions' => $this->total_insertions,
@@ -35,7 +36,7 @@ class MediaPlanResource extends JsonResource
             'cpm' => $this->cpm,
             'cpp' => $this->cpp,
             'creator' => $this->creator,
-            'gender' => $this->criteria_gender,
+            'gender' => $this->gender,
             'age_groups' => json_decode($this->criteria_age_groups),
             'regions' => json_decode($this->criteria_region),
             'social_classes' => json_decode($this->criteria_social_class),
@@ -68,6 +69,7 @@ class MediaPlanResource extends JsonResource
                 ],
                 'delete' => route('media_plan.delete', ['id'=>$this->id], false),
                 'clone' => route('media_plan.clone', ['id'=>$this->id], false),
+                'update' => route('media_plan.update', ['id'=>$this->id], false),
             ]
         ];
     }
