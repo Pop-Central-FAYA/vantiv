@@ -45,4 +45,13 @@ class CampaignTimeBelt extends Base
     {
         return $this->where('mpo_id', $mpo_id)->get();
     }
+
+    /**
+     * This is just a hack to get the actual time of the program and it will be changed when the
+     * tv station and program management bit is completed
+     */
+    public function media_program()
+    {
+        return $this->belongsTo(MediaPlanProgram::class, 'program', 'program_name');
+    }
 }

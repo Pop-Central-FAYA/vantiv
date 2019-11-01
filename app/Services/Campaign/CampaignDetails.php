@@ -28,7 +28,7 @@ class CampaignDetails
     {
         $agency_id = \Auth::user()->companies->first()->id;
         return Campaign::with(['creator', 'client', 'brand', 'time_belts.publisher', 'time_belts.vendor', 'time_belts.media_asset',
-                            'time_belts.publisher.ad_vendors'])
+                            'time_belts.publisher.ad_vendors', 'time_belts.media_program'])
                         ->where('id', $this->campaign_id)
                         ->where('belongs_to', $agency_id)
                         ->first();

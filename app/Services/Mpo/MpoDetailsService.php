@@ -83,16 +83,18 @@ class MpoDetailsService implements BaseServiceInterface
 
     protected function getMpoSumary($campaign_mpo_time_belts)
     {
-        $time_belt_group = $campaign_mpo_time_belts->groupBy(['publisher_name', 'program', 'duration']);
+        $time_belt_group = $campaign_mpo_time_belts->groupBy(['publisher_name', 'program_actual_time', 'duration']);
         $summary_data = [];
         foreach($time_belt_group as $publisher => $mpo_publisher){
-            foreach($mpo_publisher as $program => $mpo_program){
+            foreach($mpo_publisher as $program_actual_time => $mpo_program){
                 foreach($mpo_program as $duration => $mpo) {
                     $net = $mpo->sum('net_total');
+                    $exploded = $this->getProgramAndTime($program_actual_time);
                     $summary_data[] = [
                         'publisher_name' => $publisher,
                         'duration' => $duration,
-                        'program' => $program,
+                        'program' => $exploded[0],
+                        'program_time' => count($exploded) > 1 ? $exploded[1] : 'Unknown Time',
                         'total_spot' => $total_spot = $mpo->sum('ad_slots'),
                         'rate' => $mpo[0]['unit_rate'],
                         'gross_total' => $gross = $mpo[0]['unit_rate'] * $total_spot,
@@ -133,6 +135,11 @@ class MpoDetailsService implements BaseServiceInterface
     {
         $campaign_time_belts_data = [];
         foreach($campaign_mpo_time_belts as $time_belt){
+            if(isset($time_belt['media_program'])){
+                $program_time = $time_belt['program'].'_'.$time_belt['media_program']['actual_time_slot'];
+            }else{
+                $program_time = $time_belt['program'];
+            }
             $campaign_time_belts_data[] = [
                 'id' => $time_belt['id'],
                 'time_belt_start_time' => $time_belt['time_belt_start_time'],
@@ -150,6 +157,7 @@ class MpoDetailsService implements BaseServiceInterface
                 'campaign_id' => $time_belt['campaign_id'],
                 'publisher_id' => $time_belt['publisher_id'],
                 'publisher_name' => $time_belt['publisher']['name'],
+                'program_actual_time' => $program_time,
                 'ad_vendor_id' => $time_belt['ad_vendor_id'],
                 'month' => date('Y-m', strtotime($time_belt['playout_date'])),
                 'day_number' => date('j', strtotime($time_belt['playout_date'])),
@@ -176,16 +184,18 @@ class MpoDetailsService implements BaseServiceInterface
     protected function getMpoTimeBelts($campaign_mpo_time_belts)
     {
         $time_belts = [];
-        $time_belt_group = $campaign_mpo_time_belts->groupBy(['publisher_name', 'program', 'duration']);
+        $time_belt_group = $campaign_mpo_time_belts->groupBy(['publisher_name', 'program_actual_time', 'duration']);
         foreach($this->groupByDayPart($time_belt_group) as $station => $station_time_belts){
-            foreach($station_time_belts as $program => $program_time_belts){
+            foreach($station_time_belts as $program_actual_time => $program_time_belts){
                 foreach($program_time_belts as $duration => $duration_time_belts){
                     foreach($duration_time_belts as $day_part => $day_part_time_belts){
                         foreach($day_part_time_belts as $month => $month_time_belts){
+                            $exploded = $this->getProgramAndTime($program_actual_time);
                             $time_belts[] = [
                                 'duration' => $duration,
                                 'station' => $station,
-                                'program' => $program,
+                                'program' => $exploded[0],
+                                'program_time' => count($exploded) > 1 ? $exploded[1] : 'Unknown Time',
                                 'daypart' => $day_part,
                                 'time_slot' => DayPartList::DAYPARTS[$day_part],
                                 'month' => date('M y', strtotime($month)),
@@ -198,6 +208,11 @@ class MpoDetailsService implements BaseServiceInterface
             }
         }
         return $time_belts;
+    }
+
+    private function getProgramAndTime($program_actual_time)
+    {
+        return \explode('_', $program_actual_time);
     }
 
     private function groupByAsset($month_time_belts)

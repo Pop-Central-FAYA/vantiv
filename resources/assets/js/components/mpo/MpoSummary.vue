@@ -18,6 +18,7 @@
                         <td class="rule">{{ item.total_spot }}</td>
                         <td colspan="29" class="rule">Publisher Name : {{ item.publisher_name }} <br>
                                                       Program : {{ item.program }} <br>
+                                                      Program Time : {{ item.program_time }} <br>
                                                       Duration : {{ item.duration }} Seconds
                         </td>
                         <td colspan="2" class="text-right rule">{{ formatAmount(item.rate) }}</td>
