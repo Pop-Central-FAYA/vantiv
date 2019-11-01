@@ -4,6 +4,7 @@ namespace Tests\Feature\Dsp\Program;
 
 use Illuminate\Support\Arr;
 use Tests\Feature\Dsp\Station\StationTestCase;
+use Vanguard\Models\AdVendor;
 
 class UpdateProgramTest extends StationTestCase
 {
@@ -50,7 +51,6 @@ class UpdateProgramTest extends StationTestCase
         $program_data = $this->updateData();
 
         $response = $this->getResponse($user, $station->id, $program->id, $program_data);
-
         $response->assertStatus(200);
 
         $actual_data = $response->json()['data'];
@@ -92,6 +92,47 @@ class UpdateProgramTest extends StationTestCase
         
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['program_name']);
+    }
+
+    public function test_ad_vendor_association_is_deleted_if_empty_ad_vendors_array_sent()
+    {
+        $user = $this->setupAuthUser();
+        $station = $this->setupStation($user);
+
+        $program = $this->setupProgram($user);
+        $ad_vendor_one = factory(AdVendor::class)->create();
+        $program->ad_vendors()->sync($ad_vendor_one->id);
+
+        $program_data = array_merge($this->updateData(), ['ad_vendors' => []]);
+        $response = $this->getResponse($user, $station->id, $program->id, $program_data);
+        $response->assertStatus(200);
+        $ad_vendors = $response->json()['data']['ad_vendors'];
+        $this->assertCount(0, $ad_vendors);
+    }
+
+    public function test_ad_vendors_association_is_resynced_with_only_ad_vendor_ids_present_in_update_request()
+    {
+        $user = $this->setupAuthUser();
+        $station = $this->setupStation($user);
+
+        $program = $this->setupProgram($user);
+        $ad_vendor_one = factory(AdVendor::class)->create();
+        $program->ad_vendors()->sync($ad_vendor_one->id);
+
+        $ad_vendor_two = factory(AdVendor::class)->create();
+        $ad_vendor_three = factory(AdVendor::class)->create();
+
+        $ad_vendors = [
+            ['id' => $ad_vendor_two->id, 'name' => $ad_vendor_two->name],
+            ['id' => $ad_vendor_three->id, 'name' => $ad_vendor_three->name]
+        ];
+
+        $program_data = array_merge($this->updateData(), ['ad_vendors' => $ad_vendors]);
+
+        $response = $this->getResponse($user, $station->id, $program->id, $program_data);
+
+        $response->assertStatus(200);
+        $response->assertJson(['data' => ['ad_vendors' => $ad_vendors]]);
     }
 
     private function updateData()

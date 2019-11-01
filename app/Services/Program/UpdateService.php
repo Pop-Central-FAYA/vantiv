@@ -2,7 +2,9 @@
 
 namespace Vanguard\Services\Program;
 
+use DB;
 use Illuminate\Support\Arr;
+use Vanguard\Models\MediaPlanProgram;
 use Vanguard\Services\BaseServiceInterface;
 
 class UpdateService extends StoreService implements BaseServiceInterface
@@ -22,7 +24,23 @@ class UpdateService extends StoreService implements BaseServiceInterface
 
     public function run()
     {
-        $this->updateModel($this->program, static::PROGRAM_UPDATE_FIELDS, $this->setUpData());
+        $this->update();
+    }
+
+    /**
+     * Update the program, then update the ad vendors
+     * @return \Vanguard\Models\MediaPlanProgram  The model holding the program
+     */
+    protected function update()
+    {
+        return DB::transaction(function () {
+            $this->updateModel($this->program, static::PROGRAM_UPDATE_FIELDS, $this->setUpData());
+
+            $ad_vendors = Arr::get($this->data, 'ad_vendors', []);
+            $this->updateAdVendors($ad_vendors, $this->program);
+
+            return $this->program;
+        });
     }
 
     /**
@@ -46,5 +64,10 @@ class UpdateService extends StoreService implements BaseServiceInterface
             'program_name' => $this->data['program_name'],
             'attributes' => json_encode($this->formatAttribute())
         ];
+    }
+
+    protected function updateAdVendors(array $ad_vendor_list, MediaPlanProgram $program) {
+        $ad_vendor_list = collect($ad_vendor_list);
+        $program->ad_vendors()->sync($ad_vendor_list->pluck('id'));
     }
 }
