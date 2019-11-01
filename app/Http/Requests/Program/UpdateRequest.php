@@ -37,7 +37,9 @@ class UpdateRequest extends FormRequest
             'days' => 'sometimes|required|array',
             'durations' => 'sometimes|required|array',
             'start_time' => 'sometimes|required|array',
-            'end_time' => 'sometimes|required|array'
+            'end_time' => 'sometimes|required|array',
+            'ad_vendors' => 'sometimes|array',
+            'ad_vendors.*.id' => 'sometimes|string|exists:ad_vendors,id'
         ];
     }
 }

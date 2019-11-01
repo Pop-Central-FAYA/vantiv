@@ -15,4 +15,9 @@ class MediaPlanProgram extends Base
     {
         return $this->belongsTo(TvStation::class);
     }
+
+    public function ad_vendors()
+    {
+        return $this->belongsToMany(AdVendor::class, 'program_ad_vendor', 'ad_vendor_id', 'program_id');
+    }
 }

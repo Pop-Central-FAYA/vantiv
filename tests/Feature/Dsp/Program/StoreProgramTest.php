@@ -3,6 +3,7 @@
 namespace Tests\Feature\Dsp\Program;
 
 use Tests\Feature\Dsp\Station\StationTestCase;
+use Vanguard\Models\AdVendor;
 
 class StoreProgramTest extends StationTestCase
 {
@@ -67,6 +68,60 @@ class StoreProgramTest extends StationTestCase
         $response->assertJsonValidationErrors(['program_name']);
     }
 
+    public function test_programs_successfully_created_with_ad_vendor_association()
+    {
+        $vendor_one = factory(AdVendor::class)->create();
+        $vendor_two = factory(AdVendor::class)->create();
+        
+        $ad_vendors = [
+            ['id' => $vendor_one->id, 'name' => $vendor_one->name],
+            ['id' => $vendor_two->id, 'name' => $vendor_two->name]
+        ];
+        
+        $program_data = array_merge($this->storeData(), ['ad_vendors' => $ad_vendors]);
+
+        $user = $this->setupAuthUser();
+        $station = $this->setupStation($user);
+
+        $response = $this->getResponse($user, $station->id, $program_data);
+
+        $response->assertStatus(201);
+        $response->assertJson(['data' => ['ad_vendors' => $ad_vendors]]);
+    }
+
+    public function test_empty_ad_vendor_array_throws_validation_exception_on_store()
+    {
+        $program_data = ['ad_vendors' => []];
+
+        $user = $this->setupAuthUser();
+        $station = $this->setupStation($user);
+
+        $response = $this->getResponse($user, $station->id, $program_data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['ad_vendors']);
+    }
+
+    public function test_nonexistent_vendors_throws_validation_exception_on_create()
+    {
+        $random_vendor_id = uniqid();
+        $vendor_one = factory(AdVendor::class)->create();
+
+        $ad_vendors = [
+            ['id' => $vendor_one->id, 'name' => $vendor_one->name],
+            ['id' => $random_vendor_id, 'name' => 'random nonexistent vendor']
+        ];
+        $vendor_data = ['ad_vendors' => $ad_vendors];
+
+        $user = $this->setupAuthUser();
+        $station = $this->setupStation($user);
+
+        $response = $this->getResponse($user, $station, $vendor_data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['ad_vendors.1.id']);
+    }
+
     private function storeData()
     {
         return [
@@ -88,7 +143,7 @@ class StoreProgramTest extends StationTestCase
             ],
             'end_time' => [
                 '21:00:00'
-            ]
+            ],
         ];
     }
 }

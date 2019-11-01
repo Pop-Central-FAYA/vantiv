@@ -28,6 +28,11 @@ class AdVendor extends Base
         return $this->belongsToMany(Publisher::class);
     }
 
+    public function programs()
+    {
+        return $this->belongsToMany(MediaPlanProgram::class, 'program_ad_vendor', 'program_id', 'ad_vendor_id');
+    }
+
     /**
      * Get association with the campaign time belts through the ad_vendor_id column
      */

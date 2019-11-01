@@ -36,7 +36,9 @@ class StoreRequest extends FormRequest
             'durations' => 'required|array',
             'days' => 'required|array',
             'start_time' => 'required|array',
-            'end_time' => 'required|array'
+            'end_time' => 'required|array',
+            'ad_vendors' => 'sometimes|required|array',
+            'ad_vendors.*.id' => 'string|exists:ad_vendors,id'
         ];
     }
 }
