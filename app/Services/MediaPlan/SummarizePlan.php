@@ -4,6 +4,7 @@ namespace Vanguard\Services\MediaPlan;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use DateTime;
+use Vanguard\Models\MediaPlanProgram;
 
 class SummarizePlan
 {
@@ -128,14 +129,16 @@ class SummarizePlan
 
     public function groupByMediumMaterialDuration($suggestions) {
         $new_array = [];
+        $media_plan_programs = MediaPlanProgram::all();
         foreach ($suggestions as $suggestion) {
             foreach ($suggestion->material_lengths as $key => $value) {
+                $plan_program = $this->getMediaPlanProgram($media_plan_programs, $suggestion);                    
                 $new_array[] = [
                     'material_duration' => $key,
                     'station' => $suggestion->station,
                     'station_type' => $suggestion->station_type,
                     'station_region' => $suggestion->region,
-                    'program' => $suggestion->program.' '.date('h:ia', strtotime($suggestion->start_time)).' - '.date('h:ia', strtotime($suggestion->end_time)),
+                    'program' => $suggestion->program.' '. $plan_program->actual_time_slot,
                     'week_days' => $suggestion->week_days,
                     'media_type' => $suggestion->media_type,
                     'gross_unit_rate' => $value->gross_unit_rate,
@@ -154,6 +157,23 @@ class SummarizePlan
             }
         }
         return collect($new_array)->groupBy(['media_type','material_duration']);
+    }
+
+    /**
+     * @todo Change the way the actual time will be gotten after tv station and program implementation is completed
+     *
+     * @param [type] $media_plan_programs
+     * @param [type] $suggestion
+     * @return void
+     */
+    private function getMediaPlanProgram($media_plan_programs, $suggestion)
+    {
+        return $media_plan_programs->where('program_name', $suggestion->program)
+                ->where('day', $suggestion->day)
+                ->where('station', $suggestion->station)
+                ->where('start_time', $suggestion->start_time)
+                ->where('end_time', $suggestion->end_time)
+                ->first();
     }
 
     public function groupPeriodIntoMonthWeek($start_date, $end_date)

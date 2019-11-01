@@ -158,7 +158,6 @@ class MpoController extends Controller
         $this->authorize('update', $campaign);
         $this->authorize('status', $campaign);
         $validated = $request->validated();
-
         //generate mpo
         $logactivity = new LogActivity($campaign, "generate mpo");
         $log = $logactivity->log();

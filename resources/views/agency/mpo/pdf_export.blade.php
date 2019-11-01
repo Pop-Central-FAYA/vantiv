@@ -88,7 +88,8 @@
                                 </td>
                                 <td style="padding:3px 6px; text-align: left; font-size: 13px !important;">
                                     Station : {{ $time_belt['station'] }} <br>
-                                    Program : {{ $time_belt['program'] }} <br> 
+                                    Program : {{ $time_belt['program'] }} <br>
+                                    Program Time : {{ $time_belt['program_time'] }} <br> 
                                     Daypart : {{ $time_belt['daypart'] }} <br>
                                     Material :  {{ $time_belt['slots'][0]['asset'] }}<br>
                                 </td>
@@ -123,6 +124,7 @@
                         <td colspan="29" style="vertical-align: middle; padding: 5px 20px !important;">
                         Publisher Name : {{ $summary['publisher_name'] }} <br>
                         Program : {{ $summary['program'] }} <br>
+                        Program Time : {{ $summary['program_time'] }} <br>
                         Duration : {{ $summary['duration'] }} Seconds
                         </td> 
                         <td colspan="2" style="text-align: right; padding: 5px 20px;">{{ number_format($summary['rate'], 2) }}</td> 

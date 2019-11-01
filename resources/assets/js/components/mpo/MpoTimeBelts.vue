@@ -35,7 +35,7 @@
                         <td class="rule">
                             Station : {{ item.station }} <br>
                             Program : {{ item.program }} <br>
-                            <!-- Program Time : <br>  -->
+                            Program Time : {{ item.program_time }}<br> 
                             Daypart : {{ item.daypart }} <br>
                             Material : {{ adslot.asset }} <br>
                         </td>
