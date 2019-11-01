@@ -5,6 +5,7 @@ namespace Tests;
 use Drfraker\SnipeMigrations\SnipeMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Vanguard\Models\CompanyType;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -34,7 +35,8 @@ abstract class TestCase extends BaseTestCase
         if ($company == null) {
             $parent_company = factory(\Vanguard\Models\ParentCompany::class)->create();
             $company = factory(\Vanguard\Models\Company::class)->create([
-                'parent_company_id' => $parent_company->id
+                'parent_company_id' => $parent_company->id,
+                'company_type_id' => factory(CompanyType::class)->create()->id
             ]);
         }
         $user = factory(\Vanguard\User::class)->create();

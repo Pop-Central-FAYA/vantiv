@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
+use Gate;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\CampaignDate;
@@ -39,14 +40,31 @@ class CampaignsController extends Controller
         $this->campaign_dates = $campaignDate;
         $this->utilities = $utilities;
         $this->middleware('permission:update.campaign')->only(['update']);
-        $this->middleware('permission:view.campaign')->only(['index']);
+        $this->middleware('permission:view.campaign')->only(['index', 'list']);
+    }
+
+    public function list(Request $request)
+    {
+        $params = [
+            'belongs_to' => $this->companyId(),
+            'status' => $request->status
+        ];
+        
+        $campaigns = Campaign::filter($params)->get();
+        $campaigns = $campaigns->filter(function($campaign) {
+            if (Gate::allows('view-model', $campaign)) {
+                return $campaign;
+            }
+        });
+        return CampaignResource::collection($campaigns);
     }
 
     public function index(Request $request)
     {
-        $campaigns = Campaign::filter(['belongs_to'=> $this->companyId()])->get();
-        $campaigns =   CampaignResource::collection($campaigns);
-        return view('agency.campaigns.index')->with('campaigns', $campaigns);
+        $routes = [
+            'list' => route('campaigns.list',['status' => $request->status], false)
+        ];
+        return view('agency.campaigns.index')->with('routes', $routes);
     }
 
     public function getDetails(Request $request, $id)

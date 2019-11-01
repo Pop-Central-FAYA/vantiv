@@ -13,6 +13,7 @@ class CampaignTestCase extends TestCase
             'belongs_to' => $user->companies->first(),
             'created_by' => $user->id
         ]);
+        $campaign->addFollower($user);
         return $campaign->refresh();
     }
 

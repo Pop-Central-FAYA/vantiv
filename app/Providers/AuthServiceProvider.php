@@ -2,11 +2,19 @@
 
 namespace Vanguard\Providers;
 
+use Gate;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
+    /**
+     * admin roles
+     *
+     * @var array
+     */
+    const ADMIN_ROLES = ['dsp.admin', 'dsp.head_media_buyer', 'dsp.head_media_planner'];
+
     /**
      * The policy mappings for the application.
      *
@@ -31,5 +39,18 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::define('view-model', function($user, $model) {
+            return $user->isFollowing($model) || $this->isUserHead(self::ADMIN_ROLES, $user->getRoleNames());
+        });
+    }
+
+    /**
+     * Returns true if the user roles is any of the head / admin
+     */
+    private function isUserHead($roles, $user_roles)
+    {
+        $result = array_intersect($roles, $user_roles->toArray());
+        return count($result) > 0;
     }
 }

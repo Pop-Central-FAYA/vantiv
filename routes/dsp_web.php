@@ -39,24 +39,25 @@
 
         Route::get('/', 'Dsp\DashboardController@index')->name('dashboard');
 
-        Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
-            Route::get('/{status?}', 'CampaignsController@index')->name('agency.campaign.all');
-            Route::get('/details/{id}/{group?}', 'CampaignsController@getDetails')->name('agency.campaign.details');
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::get('/campaigns/{status?}', 'CampaignsController@index')->name('agency.campaign.all');
+            Route::get('/campaigns/details/{id}/{group?}', 'CampaignsController@getDetails')->name('agency.campaign.details');
 
             #api
             Route::group(['prefix' => 'api'], function() {
-                Route::get('/{campaign_id}/vendors/{ad_vendor_id}/mpos', 'MpoController@vendorMpoList')->name('campaign.vendors.mpos.lists');
-                Route::post('/{campaign_id}/assign-follower', 'CampaignsController@assignFollower')->name('campaign.assign_follower');
+                Route::get('/campaigns/{status?}', 'CampaignsController@list')->name('campaigns.list');
+                Route::get('/campaigns/{campaign_id}/vendors/{ad_vendor_id}/mpos', 'MpoController@vendorMpoList')->name('campaign.vendors.mpos.lists');
+                Route::post('/campaigns/{campaign_id}/assign-follower', 'CampaignsController@assignFollower')->name('campaign.assign_follower');
             });
-            Route::get('/{campaign_id}/groups/{group_param}', 'CampaignsController@groupCampaignTimeBelts');
-            Route::post('/{campaign_id}/adslots', 'CampaignsController@storeAdslot')->name('campaigns.adslot.store');
-            Route::patch('/{campaign_id}', 'CampaignsController@updateMultipleAdslots')->name('campaigns.adslots.update');
-            Route::patch('/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@updateAdslot')->name('update.campaign_mpo');
-            Route::delete('/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@deleteAdslot');
-            Route::post('/{campaign_id}/associate-assets', 'CampaignsController@associateAssetsToAdslot')->name('campaigns.assets.associate');
+            Route::get('/campaigns/{campaign_id}/groups/{group_param}', 'CampaignsController@groupCampaignTimeBelts');
+            Route::post('/campaigns/{campaign_id}/adslots', 'CampaignsController@storeAdslot')->name('campaigns.adslot.store');
+            Route::patch('/campaigns/{campaign_id}', 'CampaignsController@updateMultipleAdslots')->name('campaigns.adslots.update');
+            Route::patch('/campaigns/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@updateAdslot')->name('update.campaign_mpo');
+            Route::delete('/campaigns/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@deleteAdslot');
+            Route::post('/campaigns/{campaign_id}/associate-assets', 'CampaignsController@associateAssetsToAdslot')->name('campaigns.assets.associate');
 
-            Route::get('/{campaign_id}/mpos', 'MpoController@list')->name('mpos.list');
-            Route::post('/{campaign_id}/mpos', 'MpoController@generateMpo')->name('mpos.store');
+            Route::get('/campaigns/{campaign_id}/mpos', 'MpoController@list')->name('mpos.list');
+            Route::post('/campaigns/{campaign_id}/mpos', 'MpoController@generateMpo')->name('mpos.store');
         });
 
         /*
@@ -111,39 +112,41 @@
         /**
          * Sectors
          */
-        Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
+        Route::group(['namespace' => 'Dsp\MediaPlan'], function () {
             /*** New Routes ****/
-            Route::post('/{id}/suggestions', 'MediaPlanController@storeSuggestions')->name('agency.media_plan.select_suggestions');
+            Route::post('/media-plan/{id}/suggestions', 'MediaPlanController@storeSuggestions')->name('agency.media_plan.select_suggestions');
 
             /*** Old Routes ***/
-            Route::get('all/{status?}', 'MediaPlanController@index')->name('agency.media_plans');
-            // Route::get('/set-criterias', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
-            Route::get('/set-criterias/{id?}', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
-            Route::post('/create-plan', 'MediaPlanController@createNewMediaPlan')->name('agency.media_plan.submit.criterias');
-            Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary');
-            Route::post('/change-status', 'MediaPlanController@changeMediaPlanStatus')->name('agency.media_plan.change_status')->middleware('permission:create.media_plan');
-            Route::post('/get_approval/', 'MediaPlanController@postRequestApproval')->name('agency.media_plan.get_approval')->middleware('permission:create.media_plan');
-            Route::get('/customise/{id}', 'MediaPlanController@stationDetails')->name('agency.media_plan.customize');
+            Route::get('/media-plan/all/{status?}', 'MediaPlanController@index')->name('agency.media_plans');
+            Route::get('/media-plan/set-criterias', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
+            // Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.submit.criterias');
+            Route::post('/media-plan/create-plan', 'MediaPlanController@createNewMediaPlan')->name('agency.media_plan.submit.criterias');
+            Route::get('/media-plan/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary');
+            Route::post('/media-plan/change-status', 'MediaPlanController@changeMediaPlanStatus')->name('agency.media_plan.change_status')->middleware('permission:create.media_plan');
+            Route::post('/media-plan/get_approval/', 'MediaPlanController@postRequestApproval')->name('agency.media_plan.get_approval')->middleware('permission:create.media_plan');
+            Route::get('/media-plan/customise/{id}', 'MediaPlanController@stationDetails')->name('agency.media_plan.customize');
 
-            Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
-            Route::get('/createplan/{id}', 'MediaPlanController@createPlan')->name('agency.media_plan.create');
-            Route::post('/finish_plan', 'MediaPlanController@completePlan')->name('agency.media_plan.submit.finish_plan');
-            Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
-            Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
-            Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
-            Route::get('/convert-to-campaign/{id}', 'MediaPlanController@convertPlanToCampaign')->name('media_plan.campaign.create');
+            Route::post('/media-plan/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
+            // Route::post('/select_plan', 'MediaPlanController@SelectPlanPost')->name('agency.media_plan.select_suggestions');
+            Route::get('/media-plan/createplan/{id}', 'MediaPlanController@createPlan')->name('agency.media_plan.create');
+            Route::post('/media-plan/finish_plan', 'MediaPlanController@completePlan')->name('agency.media_plan.submit.finish_plan');
+            Route::get('/media-plan/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
+            Route::post('/media-plan/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
+            Route::post('/media-plan/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
+            Route::get('/media-plan/convert-to-campaign/{id}', 'MediaPlanController@convertPlanToCampaign')->name('media_plan.campaign.create');
 
             Route::group(['prefix' => 'api'], function() {
-                Route::post('/{id}/comments', 'MediaPlanCommentController@createComment')->name('agency.media_plan.comment.store');
-                Route::get('/{id}/comments', 'MediaPlanCommentController@getComments')->name('agency.media_plan.comment.all');
+                Route::get('/media-plan/{status?}', 'MediaPlanController@list')->name('media_plans.list');
+                Route::post('/media-plan/{id}/comments', 'MediaPlanCommentController@createComment')->name('agency.media_plan.comment.store');
+                Route::get('/media-plan/{id}/comments', 'MediaPlanCommentController@getComments')->name('agency.media_plan.comment.all');
                 
-                Route::post('/{id}/clone', 'MediaPlanController@clonePlan')->name('media_plan.clone');
+                Route::post('/media-plan/{id}/clone', 'MediaPlanController@clonePlan')->name('media_plan.clone');
                 
-                Route::delete('/{id}/delete', 'MediaPlanController@deletePlan')->name('media_plan.delete');
-                
-                Route::patch('/{id}', 'MediaPlanController@update')->name('media_plan.update');
+                Route::delete('/media-plan/{id}/delete', 'MediaPlanController@deletePlan')->name('media_plan.delete');
 
-                Route::post('/{id}/assign-follower', 'MediaPlanController@assignFollower')->name('media_plan.assign_followers');
+                Route::patch('/media-plan/{id}', 'MediaPlanController@update')->name('media_plan.update');
+
+                Route::post('/media-plan/{id}/assign-follower', 'MediaPlanController@assignFollower')->name('media_plan.assign_followers');
             });
         });
 

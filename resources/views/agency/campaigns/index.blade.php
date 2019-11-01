@@ -18,7 +18,7 @@
             <!-- campaigns table -->
             <v-app>
                 <v-content>
-                    <campaign-list :campaigns="{{ json_encode($campaigns) }}" :company-type="{{ json_encode(Auth::user()->company_type)}}"></campaign-list>
+                    <campaign-list :routes="{{ json_encode($routes)}}"></campaign-list>
                 </v-content>
             </v-app>
             <!-- end -->

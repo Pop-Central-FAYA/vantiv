@@ -6,7 +6,8 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="allPlans" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
+    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="allPlans" :search="search" 
+                :loading="loading" :no-data-text="noDataText" :no-results-text="noResultsText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
           <td @click="redirectPlan(props.item)" class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.campaign_name }}</a></td>
@@ -50,8 +51,7 @@
   import DeletePlan from "./DeletePlan.vue";
   export default {
     props: {
-      plans: Array,
-      clients: Array,
+      routes: Object,
     },
     components: {
         'clone-media-plan': ClonePlan,
@@ -60,7 +60,8 @@
     data () {
       return {
         search: '',
-        allPlans: this.plans,
+        allPlans: [],
+        clients : [],
         headers: [
           { text: 'Name', align: 'left', value: 'campaign_name' },
           { text: 'Product', align: 'left', value: 'product_name' },
@@ -77,7 +78,9 @@
             sortBy: 'date_created',
             descending: true,
         },
-        noDataText: 'No media plan was found'
+        loading: false,
+        noDataText: 'No Media Plans Available',
+        noResultsText: 'No Media Plans Available',
       }
     },
     created() {
@@ -93,8 +96,8 @@
         });
     },
     mounted() {
+      this.getMediaPlans()
         console.log('Display All media plans Component mounted.');
-        console.log(this.allPlans);
     },
     methods: {
       goToPlanActivities(url) {
@@ -106,6 +109,20 @@
         } else {
           window.location = plan.routes.suggestions.index;
         }
+      },
+      getMediaPlans() {
+        this.loading = true;
+        axios({
+            method: 'get',
+            url: this.routes.list
+        }).then((res) => {
+            this.allPlans = res.data.mediaPlans;
+            this.clients = res.data.clients;
+            console.log(res.data.data);
+        }).catch((error) => {
+            this.vendors = [];
+            this.sweet_alert('An unknown error has occurred, media plans cannot be retrieved. Please try again', 'error');
+        }).finally(() => this.loading = false);
       },
       getStatusColor(status) {
         var status = status.toLowerCase();

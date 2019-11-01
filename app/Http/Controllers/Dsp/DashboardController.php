@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
+use Gate;
 use Vanguard\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
@@ -11,6 +12,7 @@ use Vanguard\Models\CampaignChannel;
 use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Libraries\Enum\MediaPlanStatus;
 use Vanguard\Models\Client;
+use Vanguard\Models\MediaPlan;
 
 class DashboardController extends Controller
 {
@@ -57,6 +59,11 @@ class DashboardController extends Controller
 
         //Get all campaigns
         $campaigns = Campaign::where('belongs_to', $this->companyId())->get();
+        $campaigns = $campaigns->filter(function($campaign) {
+            if (Gate::allows('view-model', $campaign)) {
+                return $campaign;
+            }
+        });
         $count_campigns_on_hold = $this->countCampaignsByStatus($campaigns, 'on_hold');
         $count_active_campigns = $this->countCampaignsByStatus($campaigns, 'active');
         $campaign_summary = [
@@ -67,8 +74,12 @@ class DashboardController extends Controller
         ];
 
         //Get all media plans
-        $media_plan_service = new GetMediaPlans('', $this->companyId());
-        $media_plans = collect($media_plan_service->run());
+        $media_plans = MediaPlan::with('brand')->filter(['company_id' => $this->companyId()])->get();
+        $media_plans = $media_plans->filter(function($media_plan) {
+            if (Gate::allows('view-model', $media_plan)) {
+                return $media_plan;
+            }
+        });
         $count_pending_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::PENDING, MediaPlanStatus::FINALIZED, MediaPlanStatus::IN_REVIEW]);
         $count_approved_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::APPROVED]);
         $count_declined_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::REJECTED]);

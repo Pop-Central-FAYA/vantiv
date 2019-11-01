@@ -6,7 +6,8 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="campaigns" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
+    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="campaigns" :search="search" 
+                :loading="loading" :no-data-text="noDataText" :no-results-text="noResultsText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr @click="campaignDetails(props.item.redirect_url)">
           <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.name }}</a></td>
@@ -42,23 +43,26 @@
 <script>
   export default {
     props: {
-      companyType: String,
-      campaigns: Array,
+      routes: Object,
     },
     data () {
       return {
         search: '',
+        loading: false,
+        noDataText: 'No Campaigns Available',
+        noResultsText: 'No Campaigns Available',
+        campaigns : [],
         headers: this.getHeader(),
         pagination: {
             rowsPerPage: 10,
             sortBy: 'date_created',
             descending: true,
         },
-        noDataText: 'No campaign to display'
       }
     },
     mounted() {
-        console.log('Display All camapaigns Component mounted.');
+      this.getCampaigns()
+      console.log('Display All camapaigns Component mounted.');
     },
     methods: {
       campaignDetails(url) {
@@ -90,6 +94,19 @@
               default :
                   return 'grey'
           }
+      },
+      getCampaigns() {
+        this.loading = true;
+        axios({
+            method: 'get',
+            url: this.routes.list
+        }).then((res) => {
+            this.campaigns = res.data.data;
+            console.log(res.data.data);
+        }).catch((error) => {
+            this.vendors = [];
+            this.sweet_alert('An unknown error has occurred, campaigns cannot be retrieved. Please try again', 'error');
+        }).finally(() => this.loading = false);
       },
     }
   }

@@ -16,4 +16,9 @@ class CampaignFilter extends ModelFilter
     {
         return $this->where('belongs_to', $belongs_to);
     }
+
+    public function status($status)
+    {
+        return $this->where('status', $status);
+    }
 }
