@@ -4,13 +4,14 @@ namespace Vanguard\Models;
 use Vanguard\Models\MediaPlanSuggestion;
 use Actuallymab\LaravelComment\Contracts\Commentable;
 use Actuallymab\LaravelComment\HasComments;
+use EloquentFilter\Filterable;
 use Hypefactors\Laravel\Follow\Contracts\CanBeFollowedContract;
 use Hypefactors\Laravel\Follow\Traits\CanBeFollowed;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MediaPlan extends Base implements Commentable, CanBeFollowedContract
 {
-    use HasComments, SoftDeletes, CanBeFollowed;
+    use HasComments, SoftDeletes, CanBeFollowed, Filterable;
 
     protected $fillable = [
         'budget', 'criteria_gender', 'criteria_lsm', 'criteria_social_class', 'criteria_region', 'criteria_state', 
@@ -18,6 +19,11 @@ class MediaPlan extends Base implements Commentable, CanBeFollowedContract
         'campaign_name', 'client_id', 'brand_id', 'product_name', 'media_type', 'state_list', 'filters', 'gender',
         'total_insertions','gross_impressions', 'total_grp', 'net_reach', 'avg_frequency', 'net_media_cost', 'cpm', 'cpp'
     ];
+
+    public function modelFilter()
+    {
+        return $this->provideFilter(\Vanguard\ModelFilters\MediaPlanFilter::class);
+    }
 
     /**
      * Get suggestions associated with the media plan.

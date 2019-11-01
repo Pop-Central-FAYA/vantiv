@@ -13,6 +13,7 @@ class MediaPlanTestCase extends TestCase
             'company_id' => $user->companies->first(),
             'planner_id' => $user->id
         ]);
+        $mediaPlan->addFollower($user);
         return $mediaPlan->refresh();
     }
 

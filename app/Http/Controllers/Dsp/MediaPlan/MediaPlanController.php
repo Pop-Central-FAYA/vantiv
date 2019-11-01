@@ -23,6 +23,7 @@ use Log;
 use Vanguard\Services\MediaPlan\StoreCampaign;
 use Vanguard\Services\MediaPlan\StoreMpo;
 use Carbon\Carbon;
+use Gate;
 use Illuminate\Support\Arr;
 use Vanguard\Http\Requests\AssignFollowerRequest;
 use Vanguard\Http\Requests\MediaPlan\CreateStationRatingRequest;
@@ -58,6 +59,11 @@ class MediaPlanController extends Controller
     use ListDayTrait;
     use DefaultMaterialLength;
     use CompanyIdTrait;
+
+    public function __construct()
+    {
+        $this->middleware('permission:view.media_plan')->only(['index', 'list']);
+    }
 
     /**
      * Load up the page that displays the timebelts to be chosen etc.
@@ -168,17 +174,35 @@ class MediaPlanController extends Controller
         return new MediaPlanResource($media_plan);
     }
 
+    public function list(Request $request)
+    {
+        $params = [
+            'company_id' => $this->companyId(),
+            'status' => $request->status
+        ];
+
+        $mediaPlans = MediaPlan::with('brand')->filter($params)->get();
+        $mediaPlans = $mediaPlans->filter(function($mediaPlan) {
+            if (Gate::allows('view-model', $mediaPlan)) {
+                return $mediaPlan;
+            }
+        });
+        $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
+        return [
+            'clients' => $clients,
+            'mediaPlans' => MediaPlanResource::collection($mediaPlans)
+        ];
+    }
+
     /**
      * ****************** BELOW ARE THE OLD METHODS *****************
      */
     public function index(Request $request)
     {
-        $company_id = $this->companyId();
-        $media_plan_service = new GetMediaPlans($request->status, $company_id);
-        $plans = $media_plan_service->run();
-        $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
-        return view('agency.mediaPlan.index')->with('plans', new MediaPlanCollection($plans))
-                                ->with('clients', $clients);
+        $routes = [
+            'list' => route('media_plans.list', ['status' => $request->status], false)
+        ];
+        return view('agency.mediaPlan.index')->with('routes', $routes);
     }
 
     public function criteriaForm(Request $request, $id=null)
