@@ -8,7 +8,7 @@
             </v-layout>
             <v-layout style="height: 45vh !important; overflow: auto;">
                 <v-flex md12>
-                    <v-expansion-panel px-0>
+                    <v-expansion-panel class="ratings-list-panel" px-0>
 
                         <v-expansion-panel-content v-for="item in stationsList" v-bind:key="listKey(item)" @input="renderTimeBelts($event, item)">
 
@@ -53,6 +53,17 @@
     font-size: 17px;
     width: 8px;
     margin: 2px;
+}
+/* .ratings-list-panel .v-expansion-panel__header {
+    border-bottom: none;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0px 24px;
+    min-height: 40px;
+} */
+.ratings-list-panel .v-expansion-panel__body .v-card__text {
+    padding: 0px 16px;
+    width: 100%;
 }
 </style>
 

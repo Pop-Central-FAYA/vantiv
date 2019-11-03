@@ -1,33 +1,50 @@
 <template>
-    <v-layout wrap>
-        <v-flex xs12 sm3 md3>
-            <span>Station Type:</span>
-                <v-select class="mt-0 pt-1" v-model="selectedFilters.station_type" :items="filterValues['station_type']"></v-select>
-        </v-flex>
-        <v-flex xs12 sm2 md2>
-            <span>Days:</span>
-                <v-select class="mt-0 pt-1" v-model="selectedFilters.day" :items="filterValues['day']"></v-select>
-        </v-flex>
-        <v-flex xs12 sm2 md2>
-            <span>States:</span>
-                <v-select class="mt-0 pt-1" v-model="selectedFilters.state" :items="filterValues['state']"></v-select>
-        </v-flex>
-        <v-flex xs12 sm2 md2>
-            <span>Day Parts:</span>
-                <v-select class="mt-0 pt-1" v-model="selectedFilters.day_part" :items="filterValues['day_part']"></v-select>
-        </v-flex>
-        <v-flex xs12 sm3 md3 pt-4>
-            <v-btn @click="createNewRatings" color="default-vue-btn">
-                <v-icon>search</v-icon> FILTER
-            </v-btn>
-        </v-flex>
-    </v-layout>
+     <v-container grid-list-md class="p-0">
+        <v-layout row wrap class="white-bg">
+            <v-flex xs12 sm12 md12 lg12>
+                <v-expansion-panel class="filter-stations-panel">
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><h4 class="weight_medium">Filter Station & Times</h4></div>
+                        </template>
+                        <v-card flat tile>
+                            <v-card-text>
+                                <v-layout wrap>
+                                    <v-flex xs12 sm3 md3 px-1>
+                                        <span>Station Type:</span>
+                                            <v-select class="mt-0 pt-1" v-model="selectedFilters.station_type" :items="filterValues['station_type']"></v-select>
+                                    </v-flex>
+                                    <v-flex xs12 sm3 md3 px-1>
+                                        <span>Days:</span>
+                                            <v-select class="mt-0 pt-1" v-model="selectedFilters.day" :items="filterValues['day']"></v-select>
+                                    </v-flex>
+                                    <v-flex xs12 sm2 md2 px-1>
+                                        <span>States:</span>
+                                            <v-select class="mt-0 pt-1" v-model="selectedFilters.state" :items="filterValues['state']"></v-select>
+                                    </v-flex>
+                                    <v-flex xs12 sm2 md2 px-1>
+                                        <span>Day Parts:</span>
+                                            <v-select class="mt-0 pt-1" v-model="selectedFilters.day_part" :items="filterValues['day_part']"></v-select>
+                                    </v-flex>
+                                    <v-flex xs12 sm2 md2 pt-4 px-1>
+                                        <v-btn class="filter-suggestions" @click="createNewRatings" color="default-vue-btn">
+                                            <v-icon>search</v-icon> FILTER
+                                        </v-btn>
+                                    </v-flex>
+                                </v-layout>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <style>
     .v-text-field .v-input__slot {
-        padding: 0px 12px;
-        min-height: 45px;
+        padding: 2px 9px;
+        min-height: 30px;
         margin-bottom: 0px;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -38,8 +55,13 @@
     .theme--dark.v-btn.v-btn--disabled:not(.v-btn--icon):not(.v-btn--flat):not(.v-btn--outline) {
         background-color: hsl(184, 55%, 53%)!important;
     }
-    .v-btn {
-        height: 45px !important;
+    .filter-suggestions.v-btn {
+        height: 35px !important;
+        width: 100%;
+    }
+    .filter-stations-panel .v-expansion-panel__header {
+        padding: 5px 20px;
+        min-height: 30px;
     }
 </style>
 
