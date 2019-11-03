@@ -1,26 +1,36 @@
 <template>
-    <v-card px-0 pt-0 style="width: 100%">
-        <v-card-title>
-            <h5>SELECTED STATIONS AND TIMES</h5>
-        </v-card-title>
-        <v-card-text class="px-0 pt-0 pb-0" style="height:45vh; overflow: auto">
-            <v-data-table class="custom-vue-table elevation-1" :headers="headers" hide-actions :items="timeBeltsArr" :pagination.sync="pagination">
-                <template v-slot:items="props">
-                    <tr>
-                        <td class="text-xs-left">{{ props.item.station }}</td>
-                        <td class="text-xs-left">{{ props.item.day }}</td>
-                        <td class="text-xs-left">{{ format_time(props.item.start_time) }} - {{ format_time(props.item.end_time) }}</td>
-                        <td class="text-xs-left">{{ props.item.program }}</td>
-                        <td class="text-xs-left">{{ format_audience(props.item.total_audience) }}</td>
-                        <td class="text-xs-left">{{ props.item.rating }}</td>
-                        <td class="text-xs-left">
-                            <v-icon color="danger" style="color: red !important" dark @click="deleteTimebelt(props.item)">delete</v-icon>
-                        </td>
-                    </tr>
-                </template>
-            </v-data-table>
-        </v-card-text>
-    </v-card>
+    <v-container grid-list-md class="p-0">
+        <v-layout row wrap class="white-bg">
+            <v-flex xs12 sm12 md12 lg12 mb-2>
+                <v-expansion-panel>
+                    <v-expansion-panel-content>
+                        <template v-slot:header>
+                            <div><h4 class="weight_medium">Selected Stations & Times</h4></div>
+                        </template>
+                        <v-card flat tile>
+                            <v-card-text class="px-0 pt-0 pb-0" style="height:45vh; overflow: auto">
+                                <v-data-table class="custom-vue-table elevation-1" :headers="headers" hide-actions :items="timeBeltsArr" :pagination.sync="pagination">
+                                    <template v-slot:items="props">
+                                        <tr>
+                                            <td class="text-xs-left">{{ props.item.station }}</td>
+                                            <td class="text-xs-left">{{ props.item.day }}</td>
+                                            <td class="text-xs-left">{{ format_time(props.item.start_time) }} - {{ format_time(props.item.end_time) }}</td>
+                                            <td class="text-xs-left">{{ props.item.program }}</td>
+                                            <td class="text-xs-left">{{ format_audience(props.item.total_audience) }}</td>
+                                            <td class="text-xs-left">{{ props.item.rating }}</td>
+                                            <td class="text-xs-left">
+                                                <v-icon color="danger" style="color: red !important" dark @click="deleteTimebelt(props.item)">delete</v-icon>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </v-data-table>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

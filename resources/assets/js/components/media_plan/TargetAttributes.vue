@@ -77,7 +77,9 @@
                                     <v-flex md4 my-1>
                                         <p class="weight_medium">
                                             <span class="weight_medium small_faint pr-1">Gender:</span>
-                                            {{ plan.gender ? plan.gender:"Male, Female"}}
+                                            <template v-for="(gender, key) in plan.gender">
+                                                {{ gender }} {{ (plan.gender.length == key+1) ? '':',' }}
+                                            </template>
                                         </p>
                                     </v-flex>
                                     <v-flex md4 my-1 v-if="plan.age_groups.length > 0">
@@ -128,7 +130,6 @@
 
 <style>
     .targeting-attributes-panel .v-expansion-panel__header {
-        font-size: initial;
         border-bottom: 1px solid #ccc;
     }
 </style>
