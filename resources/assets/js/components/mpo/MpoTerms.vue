@@ -48,7 +48,7 @@
                 <v-flex xs1></v-flex>
                 <v-flex xs4>
                     <h3 class=" text-center signature"><span class="name">{{ fullName(mediaBuyer.firstname,mediaBuyer.lastname) }}</span> ,
-                        <span class="date" v-if="mpo.mpo_details.submitted_at != '0000-00-00 00:00:00'">{{ dateToHumanReadable(mpo.mpo_details.submitted_at) }},</span> <br>
+                        <span class="date" v-if="mpo.mpo_details.submitted_at != NULL">{{ dateToHumanReadable(mpo.mpo_details.submitted_at) }},</span> <br>
                         <span class="date">{{ mediaBuyer.email }}</span> <span v-if="mediaBuyer.phone_number">,</span><br>
                         <span class="date" v-if="mediaBuyer.phone_number">{{ mediaBuyer.phone_number }}</span>
                     </h3>
