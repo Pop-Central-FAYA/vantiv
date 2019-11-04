@@ -74,7 +74,7 @@ class DashboardController extends Controller
         ];
 
         //Get all media plans
-        $media_plans = MediaPlan::with('brand')->filter(['company_id' => $this->companyId()])->get();
+        $media_plans = MediaPlan::with('brand')->filter(['companyId' => $this->companyId()])->get();
         $media_plans = $media_plans->filter(function($media_plan) {
             if (Gate::allows('view-model', $media_plan)) {
                 return $media_plan;
