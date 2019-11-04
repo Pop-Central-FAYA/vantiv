@@ -6,10 +6,11 @@
                     <template v-slot:activator="{ on }">
                         <div v-on="on" class="d-inline-block position-icon">
                             <v-icon color="#01c4ca" dark left v-on="on" :disabled="!isCampaignOpen(campaign.status) || !isMpoOpen()" 
-                            @click="dialog = true">fa-clipboard-list</v-icon>
+                            @click="dialog = true">fa-paper-plane</v-icon>
                         </div>
                     </template>
-                    <span v-if="isCampaignOpen(campaign.status)">Submit to vendor</span>
+                    <span v-if="isCampaignOpen(campaign.status) && !isMpoOpen()">Mpo requires internal approval and cannot be submitted to vendor/publishers</span>
+                    <span v-else-if="isCampaignOpen(campaign.status)">Submit to vendor</span>
                     <span v-else>Action is disabled while campaign is {{ campaign.status.toLowerCase() }}</span>
                 </v-tooltip>
             </template>

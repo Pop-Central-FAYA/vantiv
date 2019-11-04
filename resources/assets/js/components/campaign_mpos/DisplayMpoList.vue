@@ -52,13 +52,13 @@
                     <v-container grid-list-md class="container-action-btn">
                         <v-layout wrap>
                             <v-flex xs12 sm6 md3>
+                                <approve-mpo :mpo="props.item" :campaign="campaign"></approve-mpo>
+                            </v-flex>
+                            <v-flex xs12 sm6 md3>
                                 <share-link-modal :mpo="props.item" :campaign="campaign"></share-link-modal>
                             </v-flex>
-                            <v-flex xs12 sm6 md2>
+                            <v-flex xs12 sm6 md3>
                                 <submit-mpo-modal :mpo="props.item" :campaign="campaign"></submit-mpo-modal>
-                            </v-flex>
-                            <v-flex xs12 sm6 md2>
-                                <approve-mpo :mpo="props.item" :campaign="campaign"></approve-mpo>
                             </v-flex>
                         </v-layout>
                     </v-container>

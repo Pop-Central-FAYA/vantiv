@@ -3,7 +3,7 @@
     <v-tabs>
       <v-tabs-slider></v-tabs-slider>
       <v-tab href="#summary-tab">Summary</v-tab>
-      <v-tab href="#files-tab">Files</v-tab>
+      <v-tab href="#files-tab">Materials</v-tab>
       <v-tab href="#grouped-adslots">Grouped Adslots</v-tab>
       <v-tab href="#adslots">Adslots</v-tab>
       <v-tab href="#mpos-tab">Mpos</v-tab>
