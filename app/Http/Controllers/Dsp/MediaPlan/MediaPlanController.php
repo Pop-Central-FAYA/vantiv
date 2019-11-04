@@ -177,7 +177,7 @@ class MediaPlanController extends Controller
     public function list(Request $request)
     {
         $params = [
-            'company_id' => $this->companyId(),
+            'companyId' => $this->companyId(),
             'status' => $request->status
         ];
 
