@@ -172,9 +172,9 @@
          */
         Route::group(['prefix' => 'media-assets'], function () {
             Route::get('/', 'MediaAssetsController@index')->name('agency.media_assets')->middleware('permission:view.asset');
-            Route::post('/create', 'MediaAssetsController@createAsset')->middleware('permission:create.asset');
-            Route::get('/all', 'MediaAssetsController@getAssets')->middleware('permission:view.asset');
-            Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->middleware('permission:delete.asset');
+            Route::post('/create', 'MediaAssetsController@createAsset')->name('media_asset.create')->middleware('permission:create.asset');
+            Route::get('/all', 'MediaAssetsController@getAssets')->name('media_asset.list')->middleware('permission:view.asset');
+            Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->name('media_asset.delete')->middleware('permission:delete.asset');
             Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
         });
         Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
