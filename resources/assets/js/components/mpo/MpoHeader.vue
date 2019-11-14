@@ -18,10 +18,13 @@
                     <div class="outer">
                         <div class="left-item-vendor"><h4>The Advertising manager, </h4></div>
                     </div>
-                    <div class="outer">
+                    <div class="outer" v-if="mpoDetails.vendor">
                         <div class="left-item-vendor"><h4>{{ vendor.name }}, </h4></div>
                     </div>
-                    <div class="outer">
+                    <div class="outer" v-else>
+                        <div class="left-item-vendor"><h4>{{ mpoDetails.publisher.long_name }}, </h4></div>
+                    </div>
+                    <div class="outer" v-if="mpoDetails.vendor">
                         <div class="left-item-vendor"><h4>{{ vendor.street_address }}, {{ vendor.city }}, {{ vendor.state }}. </h4></div>
                     </div>
                 </v-card-text>

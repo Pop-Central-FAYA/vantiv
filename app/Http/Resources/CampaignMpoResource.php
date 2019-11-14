@@ -16,12 +16,13 @@ class CampaignMpoResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'vendor' => $this->vendor->name,
+            'vendor' => $this->ad_vendor_id ? $this->vendor->name : '',
+            'publisher' => $this->publisher_id ? $this->publisher->name : '',
             'vendor_id' => $this->ad_vendor_id,
             'adslots' => count(json_decode($this->adslots)),
             'net_total' => $this->net_total,
             'insertions' => $this->insertions,
-            'email' => $this->vendor->contacts->where('is_primary', 1)[0]->email,
+            'email' => $this->ad_vendor_id ? $this->vendor->contacts->where('is_primary', 1)[0]->email : '',
             'status' => $this->status,
             'reference' => $this->reference_number,
             'version' => $this->version,
@@ -47,7 +48,12 @@ class CampaignMpoResource extends JsonResource
     private function isRecentMpo()
     {
         $mpo = $this->campaign->campaign_mpos
-                    ->where('ad_vendor_id', $this->ad_vendor_id)
+                    ->when($this->publisher_id, function($query) {
+                        return $query->where('publisher_id', $this->publisher_id);
+                    })
+                    ->when($this->ad_vendor_id, function($query) {
+                        return $query->where('ad_vendor_id', $this->ad_vendor_id);
+                    })
                     ->sortByDesc('created_at')
                     ->first();
         return $mpo->id === $this->id;

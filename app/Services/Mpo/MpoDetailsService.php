@@ -51,7 +51,7 @@ class MpoDetailsService implements BaseServiceInterface
             'time_belt_summary' => $mpo_time_belt_summary,
             'company' => $company,
             'net_total_word' => $this->formatNetTotalToWord($net_total),
-            'permissions' => Auth::user()->id ? Auth::user()->getAllPermissions()->pluck('name') : [],
+            'permissions' => Auth::user() ? Auth::user()->getAllPermissions()->pluck('name') : [],
             'costSummary' => $costSummary,
             'links' => [
                 'export' => route('mpos.export', ['mpo_id' => $this->mpo_id], true),
@@ -127,7 +127,7 @@ class MpoDetailsService implements BaseServiceInterface
 
     protected function getMpo()
     {
-        return CampaignMpo::with('campaign.client', 'campaign.brand', 'vendor', 'campaign.creator', 'mpo_accepter')
+        return CampaignMpo::with('campaign.client', 'campaign.brand', 'vendor', 'publisher', 'campaign.creator', 'mpo_accepter')
                 ->findOrFail($this->mpo_id);
     }
 

@@ -13,8 +13,14 @@
 	<!-- SUB HEADER -->
 	<div class="row" style="width: 100%; display: inline-block; border-bottom: 1px solid; padding: 10px 10px;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);">
 		<div class="col" style="width: 70%; float: left;">
-            <h4>The Advertising manager, <br> {{ $data['mpo_details']->vendor->name }}, <br> 
-            {{ $data['mpo_details']->vendor->street_address }}</h4>
+            <h4>The Advertising manager, <br> 
+            @if($data['mpo_details']->vendor) 
+                {{ $data['mpo_details']->vendor->name }}, <br>
+                {{ $data['mpo_details']->vendor->street_address }}
+            @else
+                {{ $data['mpo_details']->publisher->long_name }},
+            @endif<br> 
+            </h4>
 		</div>
 		<div class="col" style="width: 30%; float: right; text-align: right; display: block;">
 			<div style="clear: both;">
