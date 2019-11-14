@@ -12,9 +12,7 @@ use Vanguard\Models\CampaignMpo;
 use Vanguard\Services\Mpo\StoreMpoShareLink;
 use Vanguard\Http\Resources\MpoShareLinkResource;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 use Meneses\LaravelMpdf\Facades\LaravelMpdf;
-use Vanguard\Exports\MpoExport;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Models\Campaign;
 use Vanguard\Services\Mpo\MpoDetailsService;
@@ -43,8 +41,12 @@ class MpoController extends Controller
 
     public function list($campaign_id)
     {
-        $mpos = CampaignMpo::with('vendor.contacts')->where('campaign_id', $campaign_id)
-                            ->where('ad_vendor_id', '<>', '')
+        $mpos = CampaignMpo::with('vendor.contacts')
+                            ->where(function($query) {
+                                return $query->where('ad_vendor_id', '<>', '')
+                                            ->orWhere('publisher_id', '<>', '');
+                            })
+                            ->where('campaign_id', $campaign_id)
                             ->orderBy('created_at', 'desc')
                             ->get();
         return CampaignMpoResource::collection($mpos);
@@ -179,8 +181,8 @@ class MpoController extends Controller
     {
         $mpo = CampaignMpo::findOrFail($mpo_id);
         $this->authorize('details', $mpo);
-        
-        $export_name = str_slug($mpo->campaign->name).'_'.str_slug($mpo->vendor->name);
+        $publisher_name = $mpo->vendor ? $mpo->vendor->name : $mpo->publisher->name;
+        $export_name = str_slug($mpo->campaign->name).'_'.str_slug($publisher_name);
         $data = (new MpoDetailsService($mpo_id))->run();
         $logactivity = new LogActivity($mpo, "exported mpo");
         $log = $logactivity->log();

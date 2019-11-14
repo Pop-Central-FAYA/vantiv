@@ -23,7 +23,10 @@
         <template v-slot:items="props">
             <tr>
                 <td @click="getMpo(props.item.links.details)">
-                    <a class="default-vue-link">{{ props.item.vendor }}
+                    <a class="default-vue-link" v-if="props.item.vendor">{{ props.item.vendor }}
+                        <span v-if="props.item.is_recent">(Active)</span>
+                    </a>
+                    <a class="default-vue-link" v-else>{{ props.item.publisher }}
                         <span v-if="props.item.is_recent">(Active)</span>
                     </a>
                 </td>
@@ -86,7 +89,7 @@
             return {
                 search: '',
                 headers: [
-                    { text: 'Vendor', align: 'left', value: 'vendor',  width: '15%' },
+                    { text: 'Vendor/Publisher', align: 'left', value: 'vendor',  width: '15%' },
                     { text: 'Version', value : 'version', width: '5%'},
                     { text: 'Reference Number', value : 'reference', width: '15%'},
                     { text: 'Net Total (₦)', value: 'net_total',  width: '20%' },

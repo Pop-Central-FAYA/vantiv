@@ -22,8 +22,19 @@
                     <v-container grid-list-md>
                         <v-form>
                             <v-layout wrap>
-                                <v-flex xs12 sm12 md12>
+                                <v-flex xs12 sm12 md12 v-if="mpo.vendor">
                                     <p>You are about to submit your mpo to <b>{{ mpo.vendor }}</b> , click submit to continue</p>
+                                </v-flex>
+                                <v-flex xs12 sm12 md12 v-else>
+                                    <p>You are about to submit your mpo to <b>{{ mpo.publisher }}</b> , click submit to continue</p>
+                                    <v-text-field required :clearable="true" :full-width="true" :label="'Email Address'" 
+                                                :placeholder="'Email Address'" :hint="'Enter the email address of the publisher'" 
+                                                :solo="true" :single-line="true"
+                                                v-validate="'email'"
+                                                :error-messages="errors.collect('email')"
+                                                v-model="email"
+                                                data-vv-name="email">
+                                    </v-text-field>
                                 </v-flex>
                             </v-layout>
                         </v-form>
@@ -55,7 +66,8 @@ export default {
         return {
             dialog: false,
             shareLink : {},
-            status : this.mpo.status.toLowerCase()
+            status : this.mpo.status.toLowerCase(),
+            email : this.mpo.email
         }
     },
     mounted() {
@@ -104,7 +116,7 @@ export default {
             axios({
                 method: 'POST',
                 url: this.mpo.links.submit_to_vendor,
-                data: {url : url, email : this.mpo.email}
+                data: {url : url, email : this.email}
             }).then((res) => {
                 this.sweet_alert('Mpo Submitted to vendor successfully', 'success');
                 this.dialog = false

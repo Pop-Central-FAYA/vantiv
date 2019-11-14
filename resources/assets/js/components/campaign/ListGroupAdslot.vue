@@ -61,7 +61,7 @@
                                         :group="group_adslot"
                                     ></mpo-file-manager>
                                 </v-flex>
-                                <v-flex xs12 sm6 md3 v-if="group_adslot === 'ad_vendor_id' && props.item.time_belts[0].vendor != null">
+                                <v-flex xs12 sm6 md3>
                                     <v-tooltip top>
                                         <template v-slot:activator="{ on }">
                                             <div v-on="on" class="d-inline-block position-icon">
@@ -185,9 +185,11 @@
                     url: this.campaign.links.store_campaign_mpo,
                     data : {
                         ad_vendor_id : group_time_belt.time_belts[0].ad_vendor_id,
+                        publisher_id : group_time_belt.time_belts[0].publisher_id,
                         insertions : group_time_belt.insertions,
                         net_total : group_time_belt.net_total,
-                        adslots : group_time_belt.time_belts
+                        adslots : group_time_belt.time_belts,
+                        group : this.group_adslot,
                     }
                 }).then((res) => {
                     if(res.data === 'exists'){

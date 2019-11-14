@@ -24,10 +24,12 @@ class GenerateCampaignMpoRequest extends FormRequest
     public function rules()
     {
         return [
-            'ad_vendor_id' => 'required',
+            'publisher_id' => 'sometimes:required',
+            'ad_vendor_id' => 'sometimes:required',
             'insertions' => 'required',
             'net_total' => 'required',
-            'adslots' => 'required|array'
+            'adslots' => 'required|array',
+            'group' => 'required'
         ];
     }
 }
