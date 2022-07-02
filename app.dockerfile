@@ -8,7 +8,7 @@ LABEL Maintainer="Joshua Adeyemi <joshua@fayamedia.com>" \
 RUN apk --no-cache update \
     && apk --no-cache upgrade \
     && apk --no-cache add ca-certificates \
-    openssl \ 
+    openssl \
     openssh \
     nginx \
     supervisor \
@@ -22,7 +22,7 @@ RUN apk --no-cache update \
     nano \
     php7 \
     mysql-client
-    
+
 # Add PHP Packages
 RUN apk --no-cache add \
     php7-fpm \
@@ -80,6 +80,8 @@ RUN apk --no-cache add \
 # Add Composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
+RUN composer self-update --1
+
 # Setup document root
 RUN mkdir -p /var/www
 WORKDIR /var/www
@@ -91,7 +93,7 @@ COPY build/php.ini /etc/php7/conf.d/zzz_custom.ini
 COPY build/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN chown -R nobody.nobody /run \
-    && chown -R nobody.nobody /var/lib/nginx \ 
+    && chown -R nobody.nobody /var/lib/nginx \
     && chown -R nobody.nobody /var/tmp/nginx \
     && chown -R nobody.nobody /var/log/nginx
 
@@ -111,13 +113,13 @@ RUN cp /var/www/.env.example /var/www/.env
 USER nobody
 
 # Expose the port nginx is reachable on
-EXPOSE 8080
+EXPOSE 8050
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Configure a healthcheck to validate that everything is up&running
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
+HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8050/fpm-ping
 
 ### Default PHP INI Environment variables ###
 ### Modify for the environment needed ###

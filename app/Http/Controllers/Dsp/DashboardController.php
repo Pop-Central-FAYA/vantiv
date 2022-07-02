@@ -22,11 +22,11 @@ class DashboardController extends Controller
     {
         $media_channels = [
             'TV' => [
-                'ratings' => $this->agencyMediaChannel('TV'),
+                //'ratings' => $this->agencyMediaChannel('TV'),
                 'icon_url' => asset('new_frontend/img/tv.svg')
             ],
             'Radio' => [
-                'ratings' => $this->agencyMediaChannel('Radio'),
+                //'ratings' => $this->agencyMediaChannel('Radio'),
                 'icon_url' => asset('new_frontend/img/radio.svg')
             ],
             'Newspaper' => [

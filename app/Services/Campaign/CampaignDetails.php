@@ -68,18 +68,20 @@ class CampaignDetails
             $campaign->age_groups = $age_groups_str;
         }
         $campaign['grouped_time_belts'] = $this->groupTimeBelts($campaign);
-        
+
         return $campaign;
     }
 
     public function getMediaChannels($channelIds)
     {
-        return CampaignChannel::whereIn('id', $channelIds)->get()->pluck('channel')->toArray();
+        //return CampaignChannel::whereIn('id', $channelIds)->get()->pluck('channel')->toArray();
+        return [];
     }
 
     public function getTargetAudience($audienceIds)
     {
-        return TargetAudience::whereIn('id', $audienceIds)->get()->pluck('audience')->toArray();
+        //return TargetAudience::whereIn('id', $audienceIds)->get()->pluck('audience')->toArray();
+        return [];
     }
 
     public function groupTimeBelts($campaign)

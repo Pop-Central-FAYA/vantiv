@@ -47,6 +47,7 @@ class MediaAsset extends Base
         $url_components = parse_url($this->asset_url);
         $path_components = explode('/', $url_components['path']);
         $key = $path_components[1].'/'.$path_components[2];
-        return AmazonS3::getPresignedUrlToReadFile($key);
+        return '';
+        //return AmazonS3::getPresignedUrlToReadFile($key);
     }
 }

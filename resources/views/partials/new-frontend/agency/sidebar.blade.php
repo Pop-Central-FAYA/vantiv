@@ -11,13 +11,13 @@
                 'url' => route('agency.campaign.all', [], false),
                 'permission' => 'view.campaign',
                 'icon_class' => 'campaign_icon',
-                'active_class' => Request::is('campaigns') ? 'active' :  Request::is('campaigns/*') ? 'active' : ''
+                'active_class' => (Request::is('campaigns') ? 'active' :  Request::is('campaigns/*')) ? 'active' : ''
             ],
             'Media Plans' => [
                 'url' => route('agency.media_plans', [], false),
                 'permission' => 'view.media_plan',
                 'icon_class' => 'media_icon',
-                'active_class' => Request::is('media-plan') ? 'active' :  Request::is('media-plan/*') ? 'active' : ''
+                'active_class' => (Request::is('media-plan') ? 'active' :  Request::is('media-plan/*')) ? 'active' : ''
             ],
             'Clients' => [
                 'url' => route('client.index', [], false),
@@ -35,7 +35,7 @@
                 'url' => route('agency.media_assets', [], false),
                 'permission' => 'create.asset',
                 'icon_class' => 'wallet_icon',
-                'active_class' => Request::is('media-assets') ? 'active' :  Request::is('media-assets/*') ? 'active' : ''
+                'active_class' => (Request::is('media-assets') ? 'active' :  Request::is('media-assets/*')) ? 'active' : ''
             ],
             'Invoices' => [
                 'url' => route('invoices.all', [], false),
@@ -74,10 +74,10 @@
 
     <div class="side_nav load_this_div">
         <div class="logo mb4">{!! AssetsHelper::logo() !!}</div>
-        <vantage-side-menu 
+        <vantage-side-menu
             :side-menu-body="{{ json_encode($allowed_side_menu_body) }}"
             :side-menu-footer="{{ json_encode($allowed_side_menu_footer) }}"
         ></vantage-side-menu>
     </div>
-    
+
 </div>
