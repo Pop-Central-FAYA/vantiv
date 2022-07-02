@@ -1,0 +1,25 @@
+version: '3'
+services:
+
+  #PHP Service
+  vantiv:
+    networks:
+    - faya_bridge
+    external_links:
+    - docker_mysql
+
+  #Nginx Service
+  webserver_vantiv:
+    ports:
+    - "8020:80"
+
+#Docker Networks
+networks:
+  faya_bridge:
+    external:
+      name: faya_bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local

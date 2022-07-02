@@ -1,69 +1,57 @@
-version: "2"
+version: '3'
 services:
-  proxy:
-    image: traefik
-    command: --api --docker --docker.domain=docker.localhost --logLevel=DEBUG
-    ports:
-      - "8050:80"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /dev/null:/traefik.toml
 
-  vantage:
+  # Add this top-level entry
+  vantiv_redis:
+    image: redis:latest
+    container_name: vantiv_redis
+    restart: unless-stopped
+    tty: true
+    expose:
+    - 6379
+    volumes:
+    - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    - redisdata:/data
+    networks:
+    - app-network
+
+  #PHP Service
+  vantiv:
     build:
-      context: ./
-      dockerfile: app.dockerfile
-    image: faya-app
-    labels:
-      - traefik.backend=vantage
-      - traefik.frontend.rule=Host:local.vantage.docker.localhost
-      - traefik.port=8080
-      - traefik.frontend.passHostHeader=true
+      context: .
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    container_name: vantiv
+    restart: unless-stopped
+    tty: true
     environment:
-      - HOME=/home
-      - AWS_REGION=us-east-1
-      - MYSQL_HOST=database
-      - APACHE_SERVER_NAME=local.vantage.docker.localhost
-      - APP_URL=http://local.vantage.docker.localhost
-      - SITE_URL=local.vantage.docker.localhost
-      - PRODUCT=dsp
-      - CONTAINER_TIMEZONE=UTC
-      - PHP_ERROR_REPORTING=E_ALL
-      - PHP_DISPLAY_ERRORS=On
-      - PHP_DISPLAY_STARTUP_ERRORS=On
-      - PHP_DATE_TIMEZONE=UTC
-      - PHP_XDEBUG_ENABLED=true
-      - DB_HOST=database
-      - DB_USERNAME=faya
-      - DB_PASSWORD=faya
-      - MEDIA_BUCKET=faya-dev-us-east-1-media
-      - PHP_MEMORY_LIMIT=256M
-      - MAIL_DRIVER=log
-      - CACHE_DRIVER=database
-      - DEBUGBAR_ENABLED=false
+      SERVICE_NAME: vantiv
+      SERVICE_TAGS: dev
+    working_dir: /var/www
     volumes:
-      - $HOME/.aws:/home/.aws:delegated
-      - ./:/var/www:delegated
-    cap_add:
-      - SYS_TIME
-      - SYS_NICE
+    - ./:/var/www
+    - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+    - app-network
 
-  database:
-    image: mysql:5.7
-    ports:
-        - "33061:3306"
-    environment:
-      - MYSQL_DATABASE=faya
-      - MYSQL_USER=faya
-      - MYSQL_PASSWORD=faya
-      - MYSQL_ROOT_PASSWORD=faya
-      - TZ=UTC
+  #Nginx Service
+  webserver_vantiv:
+    image: nginx:alpine
+    container_name: webserver_vantiv
+    restart: unless-stopped
+    tty: true
     volumes:
-      - $PWD/dev/mysql:/var/lib/mysql:cached
-      - $PWD/database/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    # command: --lower_case_table_names=0
+    - ./:/var/www
+    - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+    - app-network
 
-# docker compose issues with mounting on mac
-# https://docs.docker.com/docker-for-mac/osxfs-caching/
-# traefix
-# https://jtreminio.com/blog/traefik-on-docker-for-web-developers/
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  redisdata:
+    driver: local
