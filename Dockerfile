@@ -102,7 +102,6 @@ RUN cp /var/www/.env.example /var/www/.env
 RUN /usr/local/bin/composer update --no-ansi --optimize-autoloader --no-plugins --no-interaction \
     && rm -rf /var/www/node_modules \
     && php artisan config:clear \
-    && php artisan cache:clear \
     && php artisan route:clear
 
 # Change current user to www
