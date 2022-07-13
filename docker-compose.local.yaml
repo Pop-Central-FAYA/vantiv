@@ -2,16 +2,16 @@ version: '3'
 services:
 
   #PHP Service
-  vantiv:
+  publisher:
     networks:
     - faya_bridge
     external_links:
     - docker_mysql
 
   #Nginx Service
-  webserver_vantiv:
+  webserver_publisher:
     ports:
-    - "8020:80"
+    - "8070:80"
 
 #Docker Networks
 networks:

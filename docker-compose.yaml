@@ -35,9 +35,9 @@ services:
     - app-network
 
   #Nginx Service
-  webserver_vantiv:
+  vantiv_server:
     image: nginx:alpine
-    container_name: webserver_vantiv
+    container_name: vantiv_server
     restart: unless-stopped
     tty: true
     volumes:

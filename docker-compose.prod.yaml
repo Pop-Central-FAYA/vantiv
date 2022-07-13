@@ -1,6 +1,6 @@
 version: '3'
 services:
   #Nginx Service
-  webserver_vantiv:
+  webserver_publisher:
     ports:
-    - "8020:80"
+    - "8070:80"
