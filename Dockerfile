@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl\
+    nodejs \
+    npm \
     libzip-dev
 
 # Clear cache
