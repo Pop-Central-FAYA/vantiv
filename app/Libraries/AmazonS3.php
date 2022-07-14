@@ -24,7 +24,8 @@ Class AmazonS3
 
     public static function generatePreSignedUrl($filename, $folder)
     {
-        $filename = uniqid().'-'.Str::slug($filename);
+        $file_extension = Str::after($filename, '.');
+        $filename = uniqid().'-'.uniqid().'.'.$file_extension;
 
         $s3Client = AmazonS3::createNewS3Client();
 
@@ -48,7 +49,7 @@ Class AmazonS3
         ]);
         $request = $s3Client->createPresignedRequest($cmd, self::READ_EXPIRATION);
         $presignedUrlPut = (string) $request->getUri();
-        return $presignedUrlPut;   
+        return $presignedUrlPut;
     }
 
     public static function uploadToS3FromPath($pathToFile, $slug)
